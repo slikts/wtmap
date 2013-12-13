@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>War Thunder Map Options</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" href="options.css">
+    </head>
+    <body id="options">
+        <div id="wrapper">
+            <p>
+                <label for="proximity_radius">Proximity alert radius:</label> 
+                <input type="text" id="proximity_radius"> meters
+            </p>
+            <p style="display: none;">
+                <label for="proximity_sound_file">Proximity alert sound file:</label> 
+                <input type="text" id="proximity_sound_file">
+            </p>
+            <p>
+                <label for="plane_icon_size">Plane icon size:</label> 
+                <input type="text" id="plane_icon_size"> pixels
+            </p>
+            <p>
+                <label for="alert_volume">Alert volume:</label> 
+                <input type="text" id="alert_volume">
+            </p>
+            <p>
+                <button id="save">Save</button>
+                <button id="restore">Restore defaults</button>
+            </p>
+            <p id="status"></p>
+        </div>
+        <script src="jquery-1.10.2.min.js"></script>
+        <script src="settings.js"></script>
+        <script src="options.js"></script>
+    </body>
+</html>

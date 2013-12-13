@@ -1,0 +1,21 @@
+{
+    "manifest_version": 2,
+    "name": "War Thunder Map",
+    "description": "Adds proximity alert and other enhancements to the War Thunder browser map.",
+    "version": "0.1",
+    "permissions": [
+        "http://localhost:8111/"
+    ],
+    "content_security_policy": "script-src 'self' http://localhost:8111 'unsafe-eval'; object-src 'self'",
+    "app": {
+        "launch": {
+            "local_path": "index.html"
+        }
+    },
+    "icons": {
+        "128": "icon-128.png",
+        "16": "icon-16.png",
+        "48": "icon-48.png"
+    },
+    "options_page": "options.html"
+}
