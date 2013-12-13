@@ -1,6 +1,6 @@
 {
     "manifest_version": 2,
-    "name": "War Thunder Map",
+    "name": "WT Map+",
     "description": "Adds proximity alert and other enhancements to the War Thunder browser map.",
     "version": "0.1",
     "permissions": [
@@ -17,5 +17,6 @@
         "16": "icon-16.png",
         "48": "icon-48.png"
     },
-    "options_page": "options.html"
+    "options_page": "options.html",
+    "homepage_url": "https://github.com/slikts/wtmap"
 }
