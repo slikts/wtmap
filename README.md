@@ -56,8 +56,6 @@ them to connect.
 Notes
 -----
 
-The features added by this extension don't depend on Chrome-specific
-functionality and should be easily portable to other platforms.
 
 The extension only has permission to access http://localhost:8111/ by default
 and the permissions to access other map locations are requested on the fly
@@ -67,6 +65,9 @@ The extension works by monkey-patching the code used in the original map.
 It doesn't modify the map in-place but recreates it in a special page
 because the Chrome content scripts can only access page DOM and not their
 JavaScript environment.
+
+The features added by this extension don't depend on Chrome-specific
+functionality and should be easily portable to other platforms.
 
 The idea of making this extension comes from the
 [War Thunder tactical map](https://play.google.com/store/apps/details?id=net.junkcode.warthundertacticalmap)
