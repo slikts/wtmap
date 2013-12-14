@@ -1,16 +1,16 @@
-![logo](https://raw.github.com/slikts/wtmap/master/images/icon-128.png)
-
 WT map
 =======
+
+![logo](https://raw.github.com/slikts/wtmap/master/images/icon-128.png)
 
 WT map is a Chrome extension that enhances the browser-based
 map in [War Thunder](http://warthunder.com/). It can be used with multi-monitor
 setups or on a different device from the one running the game.
 
-![screenshot](https://raw.github.com/slikts/wtmap/master/images/screenshot.png)
-
 Features
 --------
+
+![screenshot](https://raw.github.com/slikts/wtmap/master/images/screenshot.png)
 
 New:
 
