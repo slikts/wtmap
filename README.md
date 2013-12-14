@@ -57,8 +57,8 @@ Notes
 -----
 
 
-The extension only has permission to access http://localhost:8111/ by default
-and the permissions to access other map locations are requested on the fly
+By default the extension only has permission to access http://localhost:8111/ 
+and the permissions to access other map locations are requested separately
 if needed and removed if not used.
 
 The extension works by monkey-patching the code used in the original map.
