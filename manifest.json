@@ -14,12 +14,6 @@
     },
     "options_page": "options.html",
     "homepage_url": "https://github.com/slikts/wtmap",
-    "content_scripts": [
-        {
-            "matches": ["http://localhost:8111/*"],
-            "js": ["vendor/jquery-1.10.2.min.js", "scripts/redirect.js"]
-        }
-    ],
     "background": {
         "scripts": ["scripts/background.js"],
         "persistent": false
