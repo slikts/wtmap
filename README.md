@@ -11,7 +11,9 @@ of the map is to help improve situational awareness.
 Features
 --------
 
-![screenshot](https://raw.github.com/slikts/wtmap/master/images/screenshot.png)
+![map screenshot](https://raw.github.com/slikts/wtmap/master/images/screenshot.png)
+
+![options screenshot](https://raw.github.com/slikts/wtmap/master/images/options.png)
 
 New:
 
