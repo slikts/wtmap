@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>WT map: Error</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" href="styles/main.css">
+    </head>
+    <body id="wtm-error">
+        <div id="wtm-wrapper">
+            <div id="header">
+                <a href="index.html" id="logo"><img src="images/icon-128.png" alt="Logo"></a>
+                <h1>WT map: Error</h1>
+            </div>
+            <div id="content">
+                <p>Unable to load <a id="link" target="_blank">...</a></p>
+                <p id="err1">Please make sure the game is running 
+                    and the network settings are correct and <a href="index.html">try again</a>.</p>
+                <div id="err2" style="display: none;">
+                    <p>
+                        WT map requires the permission to load resource: <button id="request">Add Permission</button>
+                    </p>
+                </div>
+                <p><a href="options.html">Go to options</a></p>
+            </div>
+        </div>
+        <script src="vendor/jquery-1.10.2.min.js"></script>
+        <script src="scripts/settings.js"></script>
+        <script src="scripts/error.js"></script>
+    </body>
+</html>

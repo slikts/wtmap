@@ -1,0 +1,62 @@
+@font-face {
+    font-family: 'Communist'; 
+    src: url('../fonts/communist.ttf'); 
+}
+
+#wtm-options label {
+    display: block;
+}
+#wtm-options button,
+#wtm-options input {
+    position: relative;
+}
+#wtm-options #proximity_sound_file {
+    width: 50em;
+}
+#wtm-options #test_sound,
+#wtm-options input {
+    top: -2px;
+}
+#wtm-options table {
+    border-collapse: collapse;
+}
+#wtm-options td {
+    padding-left: 0;
+}
+
+    
+#wtm-options #alert_volume,
+#wtm-options #proximity_radius,
+#wtm-options #plane_icon_size {
+    width: 3em;
+}
+#wtm-options #plane_icon_preview {
+    font-family: 'plane_icons';
+    position: absolute;
+    white-space: nowrap;
+    margin-left: 10px;
+    margin-top: -5px;
+    color: red;
+    letter-spacing: .1em;
+}
+
+#wtm-wrapper #logo {
+    position: absolute;
+    right: 100%;
+    margin-right: 20px;
+    top: 0;
+}
+#wtm-wrapper {
+    padding-top: 5px;
+    position: relative;
+    font-family: 'Communist', sans-serif;
+    width: 500px;
+    margin: auto;
+    color: #333;
+}
+#wtm-wrapper h1 {
+    border-bottom: 4px solid rgba(0, 80, 122, .15);
+}
+#wtm-wrapper .text {
+    font-size: 12px;
+}

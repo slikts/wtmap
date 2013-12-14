@@ -1,7 +1,7 @@
 WT Map+
 =======
 
-WT Map+ is a Chrome app or extension that enhances the browser-based
+WT Map+ is a Chrome extension that enhances the browser-based
 map in [War Thunder](http://warthunder.com/). It is meant to be used
 in multi-monitor setups.
 

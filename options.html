@@ -1,36 +1,93 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>WT Map+ Options</title>
+        <title>WT map Options</title>
         <meta charset="UTF-8">
-        <link rel="stylesheet" type="text/css" href="options.css">
+        <link rel="stylesheet" type="text/css" href="styles/main.css">
+        <link rel="stylesheet" type="text/css" href="styles/icons.css">
     </head>
-    <body id="options">
-        <div id="wrapper">
-            <p>
-                <label for="proximity_radius">Proximity alert radius:</label> 
-                <input type="text" id="proximity_radius"> meters
-            </p>
-            <p style="display: none;">
-                <label for="proximity_sound_file">Proximity alert sound file:</label> 
-                <input type="text" id="proximity_sound_file">
-            </p>
-            <p>
-                <label for="plane_icon_size">Plane icon size:</label> 
-                <input type="text" id="plane_icon_size"> pixels
-            </p>
-            <p>
-                <label for="alert_volume">Alert volume:</label> 
-                <input type="text" id="alert_volume">
-            </p>
-            <p>
-                <button id="save">Save</button>
-                <button id="restore">Restore defaults</button>
-            </p>
-            <p id="status"></p>
+    <body id="wtm-options">
+        <div id="wtm-wrapper">
+            <div id="wrapper">
+                <div id="header">
+                    <a href="index.html" id="logo"><img src="images/icon-128.png" alt="Logo"></a>
+                    <h1>WT map: Options</h1>
+                </div>
+                <p>
+                    <a href="index.html">Go to map</a>
+                    <span class="text">(Bookmark this link for quick access)</span>
+                </p>
+
+                <table>
+                    <colgroup>
+                       <col style="width: 40%;">
+                       <col>
+                    </colgroup>
+                    <tr>
+                        <td>
+                            <label for="proximity_radius">Proximity alert radius:</label> 
+                        </td>
+                        <td>
+                            <input type="text" id="proximity_radius"> 
+                            <span class="text">meters (<span id="feet">…</span> miles)</span>
+                        </td>
+                    </tr>
+                    <tr style="display: none;">
+                        <td>
+                            <label for="proximity_sound_file">Proximity alert sound file:</label> 
+                        </td>
+                        <td>
+                            <input type="text" spellcheck="false" id="proximity_sound_file">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="plane_icon_size">Plane icon size:</label> 
+                        </td>
+                        <td>
+                            <input type="text" spellcheck="false" id="plane_icon_size"> <span class="text">pixels</span>
+                            <span id="plane_icon_preview"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="alert_volume">Alert volume:</label>
+                        </td>
+                        <td>
+                            <input type="text" spellcheck="false" id="alert_volume">
+                            <button id="test_sound">Test</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="base_url">Map location:</label>
+                        </td>
+                        <td>
+                            <input type="text" spellcheck="false" id="base_url">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <span class="text">
+                                The map location should be http://localhost:8111/ if the game is running locally.<br>
+                                If you're trying to use the map from a different device, 
+                                you need to make sure that the game is not firewalled
+                                and that the network setup allows it (for instance, if
+                                it's possible to connect from wireless to wired devices).
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+                    
+                <p>
+                    <button id="save">Save</button>
+                    <button id="restore">Restore Defaults</button>
+                </p>
+                <p id="status"></p>
+            </div>
+            <script src="vendor/jquery-1.10.2.min.js"></script>
+            <script src="scripts/settings.js"></script>
+            <script src="scripts/options.js"></script>
         </div>
-        <script src="jquery-1.10.2.min.js"></script>
-        <script src="settings.js"></script>
-        <script src="options.js"></script>
     </body>
 </html>
