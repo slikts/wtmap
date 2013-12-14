@@ -9,7 +9,7 @@ var WTM = {
     },
     settings: {},
     update: function() {
-        var self = this;
+        var settings = this.settings;
         $.each(this.defaults, function(key, value) {
             var result = localStorage[key] || value;
             if (typeof value === 'number') {
@@ -17,10 +17,8 @@ var WTM = {
             } else {
                 result = result.trim();
             }
-            self.settings[key] = result;
+            settings[key] = result;
         });
-
-        var settings = this.settings;
         
         settings.base_url = settings.base_url.replace(/\/+$/, '') + '/';
         if (!/https?:\/\//.test(settings.base_url)) {

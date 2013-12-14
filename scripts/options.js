@@ -12,7 +12,6 @@
 
     $text_inputs.keyup(function() {
         var $this = $(this);
-        console.log($this.val() != WTM.settings[$this.attr('id')]);
         $this.data('changed', $this.val() != WTM.settings[$this.attr('id')]);
     });
 
@@ -84,7 +83,6 @@
 
     load_values();
 
-
     var $status = $('#status');
     $('#save').click(function() {
         chrome.permissions.remove({origins: [WTM.settings.base_url]},
@@ -143,7 +141,6 @@
     window.onbeforeunload = function() {
         var changes = false;
         $inputs.each(function() {
-            console.log($inputs);
             if ($(this).data('changed')) {
                 changes = true;
                 return false;
