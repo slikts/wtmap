@@ -72,8 +72,8 @@ The idea of making this extension comes from the
 [War Thunder tactical map](https://play.google.com/store/apps/details?id=net.junkcode.warthundertacticalmap)
 Android app.
 
-The icon for the fighter planes is a Spitfire, IL-2 for the attackers 
-and He 88 for the bombers.
+The icons for the planes are P-39 for fighters, IL-2 for attackers 
+and He 88 for bombers.
 
 Licence
 -------

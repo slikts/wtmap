@@ -10,6 +10,18 @@
 #wtm-options label {
     display: block;
 }
+#wtm-options label[for=units-feet],
+#wtm-options label[for=units-meters] {
+    display: inline;
+}
+#wtm-options #installed {
+    margin: 1.5em 0;
+    display: none;
+    color: #aaa;
+}
+#wtm-options #goto {
+    margin: 1.5em 0;
+}
 #wtm-options button,
 #wtm-options input {
     position: relative;
@@ -18,7 +30,7 @@
     width: 50em;
 }
 #wtm-options #test_sound,
-#wtm-options input {
+#wtm-options input[type=text] {
     top: -2px;
 }
 #wtm-options table {
@@ -61,6 +73,8 @@
 #wtm-wrapper h1 {
     border-bottom: 4px solid rgba(0, 80, 122, .15);
 }
+#wtm-options label[for=units-feet],
+#wtm-options label[for=units-meters],
 #wtm-wrapper .text {
     font-size: 12px;
 }

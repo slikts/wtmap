@@ -2,13 +2,11 @@ $.get(WTM.settings.base_url, function(data) {
     var sound_file = WTM.settings['proximity_sound_file'];
     var volume = WTM.settings.alert_volume;
     function play_sound() {
-        var audio = new Audio(sound_file);
-        audio.volume = volume;
-        audio.play();
+        WTM.play_sound(sound_file, volume);
     }
 
     var _title = document.title;
-    
+
     var $wtm_scripts = $('script');
 
     $(document.body).html(data
@@ -30,11 +28,11 @@ $.get(WTM.settings.base_url, function(data) {
         }
         scripts.push(src);
     });
-    
+
     $scripts.not($eval).each(function() {
         var $this = $(this);
         var src = $this.data('src');
-        
+
         $.get(src, function(data) {
             loaded_scripts += 1;
             scripts[scripts.indexOf(src)] = data;
@@ -187,7 +185,9 @@ $.get(WTM.settings.base_url, function(data) {
                     title_info.push('E:' + proximate_enemies);
                 }
                 if (min_distance !== null) {
-                    title_info.push(' > ' + (min_distance / 1000).toFixed(2) + ' km');
+                    var _units = WTM.settings.units === 'meters' ? 'km' : 'mi';
+                    var _min_distance = (WTM.m2x(min_distance, _units)).toFixed(2);
+                    title_info.push(' > ' + _min_distance + ' ' + _units);
                 }
                 title_info.push('F:' + friendlies);
 

@@ -18,5 +18,11 @@
         "scripts": ["scripts/background.js"],
         "persistent": false
     },
-    "optional_permissions": ["http://*/"]
+    "optional_permissions": ["http://*/"],
+    "content_scripts": [
+        {
+            "matches": ["http://localhost:8111/*"],
+            "js": ["vendor/jquery-1.10.2.min.js", "scripts/redirect.js"]
+        }
+    ]
 }

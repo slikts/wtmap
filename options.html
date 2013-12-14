@@ -13,15 +13,16 @@
                     <a href="index.html" id="logo"><img src="images/icon-128.png" alt="Logo"></a>
                     <h1>WT map: Options</h1>
                 </div>
-                <p>
+                <p id="installed">Extension installed.</p>
+                <p id="goto">
                     <a href="index.html">Go to map</a>
                     <span class="text">(Bookmark this link for quick access)</span>
                 </p>
 
                 <table>
                     <colgroup>
-                       <col style="width: 40%;">
-                       <col>
+                        <col style="width: 40%;">
+                        <col>
                     </colgroup>
                     <tr>
                         <td>
@@ -29,7 +30,18 @@
                         </td>
                         <td>
                             <input type="text" id="proximity_radius"> 
-                            <span class="text">meters (<span id="feet">…</span> miles)</span>
+                            <span class="text" id="unit_label"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Units:</label> 
+                        </td>
+                        <td>
+                            <input type="radio" value="meters" id="units-meters" name="units">
+                            <label for="units-meters">Meters</label>
+                            <input type="radio" value="feet" id="units-feet" name="units">
+                            <label for="units-feet">Feet</label>
                         </td>
                     </tr>
                     <tr style="display: none;">
@@ -78,7 +90,7 @@
                         </td>
                     </tr>
                 </table>
-                    
+
                 <p>
                     <button id="save">Save</button>
                     <button id="restore">Restore Defaults</button>
@@ -86,7 +98,7 @@
                 <p id="status"></p>
             </div>
             <script src="vendor/jquery-1.10.2.min.js"></script>
-            <script src="scripts/settings.js"></script>
+            <script src="scripts/wtm.js"></script>
             <script src="scripts/options.js"></script>
         </div>
     </body>

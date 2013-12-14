@@ -2,22 +2,30 @@
     'use strict';
 
     var $inputs = $('input');
+    var $text_inputs = $inputs.filter('[type=text]');
 
-    var $feet = $('#feet');
-    var $proximity_radius = $('#proximity_radius');
     var $plane_icon_preview = $('#plane_icon_preview');
     var $plane_icon_size = $('#plane_icon_size');
+    
+    var $proximity_radius = $('#proximity_radius');
+    var $unit_label = $('#unit_label');
 
-    $inputs.change(function() {
+    $text_inputs.keyup(function() {
         var $this = $(this);
+        console.log($this.val() != WTM.settings[$this.attr('id')]);
         $this.data('changed', $this.val() != WTM.settings[$this.attr('id')]);
     });
 
-    function update_feet() {
-        $feet.text((parseInt($proximity_radius.val(), 10) / 1000 * 0.621371).toFixed(2));
+    function update_proximity_radius(units) {
+        units = units || WTM.settings.units;
+        $unit_label.text(units);
+        $proximity_radius.val(Math.round(WTM.m2x(WTM.settings.proximity_radius, units)));
     }
 
-    $proximity_radius.keyup(update_feet);
+    if (localStorage['options_installed'] !== 'true') {
+        localStorage['options_installed'] = 'true';
+        $('#installed').show();
+    }
 
     var previews = {};
     $.each(WTM.icons, function(key) {
@@ -36,14 +44,32 @@
     }
 
     $plane_icon_size.keyup(update_icons);
+    
+    var $unit_inputs = $inputs.filter('[name=units]');
+    $unit_inputs.change(function() {
+        var $this = $(this);
+        var val = $this.val();
+        $unit_inputs.not($this).data('changed', false);
+        $this.data('changed', val !== WTM.settings.units);
+        update_proximity_radius(val);
+    });
 
     function load_values() {
-        $inputs.each(function() {
+        var settings = WTM.settings;
+        $text_inputs.each(function() {
             var $this = $(this);
-            $this.val(WTM.settings[$this.attr('id')])
-                    .data('changed', false);
+            var key = $this.attr('id');
+            var val = settings[key];
+            $this.data('changed', false);
+            if (key === 'proximity_radius') {
+                return;
+            }
+            $this.val(val);
         });
-        update_feet();
+        
+        update_proximity_radius();
+        $unit_inputs.data('changed', false);
+        $unit_inputs.filter('[value=' + settings.units + ']').click();
         update_icons();
     }
 
@@ -64,14 +90,18 @@
         chrome.permissions.remove({origins: [WTM.settings.base_url]},
         function() {
         });
-        
-        $inputs.each(function() {
+        var units = $unit_inputs.filter(':checked').val();
+
+        $text_inputs.each(function() {
             var $this = $(this);
             var val = $this.val();
             var key = $this.attr('id');
             var default_val = WTM.defaults[key];
             if (typeof default_val === 'number') {
                 val = parseInt(val, 10);
+            }
+            if (key === 'proximity_radius') {
+                val = WTM.x2m(val, units);
             }
             if (!val || val === default_val) {
                 // Reset to default
@@ -80,13 +110,15 @@
             }
             localStorage[key] = val;
         });
+        
+        localStorage.units = units;
         WTM.update();
         load_values();
 
         chrome.permissions.request({origins: [WTM.settings.base_url]},
         function() {
         });
-       
+
         display_status('Options saved');
     });
     $('#restore').click(function() {
@@ -103,15 +135,15 @@
     });
 
     $('#test_sound').click(function() {
-        var audio = new Audio($('#proximity_sound_file').val());
-        audio.volume = parseFloat($('#alert_volume').val(), 10);
-        audio.play();
+        WTM.play_sound($('#proximity_sound_file').val(),
+                parseFloat($('#alert_volume').val(), 10));
         return false;
     });
 
     window.onbeforeunload = function() {
         var changes = false;
         $inputs.each(function() {
+            console.log($inputs);
             if ($(this).data('changed')) {
                 changes = true;
                 return false;
