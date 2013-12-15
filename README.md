@@ -11,15 +11,13 @@ of the map is to help improve situational awareness.
 Features
 --------
 
-Map:
-
 ![map screenshot](https://raw.github.com/slikts/wtmap/master/images/screenshot.png)
-
-Options:
+Map
 
 ![options screenshot](https://raw.github.com/slikts/wtmap/master/images/options.png)
+Options
 
-New:
+#### New
 
  * Different plane icons for fighters, bombers and attackers
  * Plane icons show plane orientation
@@ -35,7 +33,7 @@ New:
    * The total number of allied planes
  * Ground units never obscure plane icons
 
-Planned:
+#### Planned
 
  * Configurable sound for proximity alert
  * Firefox version (?)
@@ -88,11 +86,11 @@ increasing the update rate prevents the map image from being loaded.
 Changelog
 ---------
 
-#### 2013-12-15 0.1.5
+##### 2013-12-15 0.1.5
 
 Added configurable map centering and zooming on player
 
-#### 2013-12-14 0.1.4
+##### 2013-12-14 0.1.4
 
 Initial release
 
