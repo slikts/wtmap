@@ -84,11 +84,11 @@ increasing the update rate prevents the map image from being loaded.
 Changelog
 ---------
 
-**2013-12-15** — 0.1.5
+2013-12-15 **0.1.5**
 
  * Added configurable map centering and zooming on player
 
-**2013-12-14** — 0.1.4
+2013-12-14 **0.1.4**
 
  * Initial release
 
