@@ -3,6 +3,7 @@
 
     var $inputs = $('input');
     var $text_inputs = $inputs.filter('[type=text]');
+    var $checkbox_inputs = $inputs.filter('[type=checkbox]');
 
     var $plane_icon_preview = $('#plane_icon_preview');
     var $plane_icon_size = $('#plane_icon_size');
@@ -52,6 +53,11 @@
         $this.data('changed', val !== WTM.settings.units);
         update_proximity_radius(val);
     });
+    
+    $checkbox_inputs.change(function() {
+        var $this = $(this);
+        $this.data('changed', this.checked * 1 !== WTM.settings[$this.attr('id')]);
+    });
 
     function load_values() {
         var settings = WTM.settings;
@@ -64,6 +70,12 @@
                 return;
             }
             $this.val(val);
+        });
+        
+        $checkbox_inputs.each(function() {
+            var $this = $(this);
+            this.checked = !!settings[$this.attr('id')];
+            $this.data('changed', false);
         });
         
         update_proximity_radius();
@@ -107,6 +119,18 @@
                 return;
             }
             localStorage[key] = val;
+        });
+        
+        $checkbox_inputs.each(function() {
+            var $this = $(this);
+            var val = this.checked * 1;
+            var key = $this.attr('id');
+            
+            if (val === WTM.defaults[key]) {
+                localStorage.removeItem(key);
+            } else {
+                localStorage[key] = val;
+            }
         });
         
         localStorage.units = units;

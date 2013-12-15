@@ -5,7 +5,9 @@ var WTM = {
         units: 'meters',
         alert_volume: 0.15,
         plane_icon_size: 25,
-        base_url: 'http://localhost:8111/'
+        base_url: 'http://localhost:8111/',
+        map_center: 1,
+        map_scale: 60
     },
     settings: {},
     update: function() {
@@ -39,7 +41,8 @@ var WTM = {
         'meters': 1,
         'feet': 3.28084,
         'mi': 0.000621371,
-        'km': 0.001
+        'km': 0.001,
+        'nmi': 0.000539957
     },
     m2x: function(m, x) {
         return m * this.conversion[x];

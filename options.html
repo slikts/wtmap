@@ -28,7 +28,8 @@
                             <label for="proximity_radius">Proximity alert radius:</label> 
                         </td>
                         <td>
-                            <input type="text" id="proximity_radius"> 
+                            <input type="text" id="proximity_radius"
+                                   class="input_number"> 
                             <span class="text" id="unit_label"></span>
                         </td>
                     </tr>
@@ -43,20 +44,14 @@
                             <label for="units-feet">Feet</label>
                         </td>
                     </tr>
-                    <tr style="display: none;">
-                        <td>
-                            <label for="proximity_sound_file">Proximity alert sound file:</label> 
-                        </td>
-                        <td>
-                            <input type="text" spellcheck="false" id="proximity_sound_file">
-                        </td>
-                    </tr>
                     <tr>
                         <td>
                             <label for="plane_icon_size">Plane icon size:</label> 
                         </td>
                         <td>
-                            <input type="text" spellcheck="false" id="plane_icon_size"> <span class="text">pixels</span>
+                            <input type="text" spellcheck="false" id="plane_icon_size"
+                                   class="input_number">
+                            <span class="text">pixels</span>
                             <span id="plane_icon_preview"></span>
                         </td>
                     </tr>
@@ -65,7 +60,8 @@
                             <label for="alert_volume">Alert volume:</label>
                         </td>
                         <td>
-                            <input type="text" spellcheck="false" id="alert_volume">
+                            <input type="text" spellcheck="false" id="alert_volume"
+                                   class="input_number">
                             <button id="test_sound">Test</button>
                         </td>
                     </tr>
@@ -74,7 +70,26 @@
                             <label for="base_url">Map location:</label>
                         </td>
                         <td>
-                            <input type="text" spellcheck="false" id="base_url">
+                            <input type="text" spellcheck="false" id="base_url"
+                                   class="input_text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="map_center">Center map on player:</label>
+                        </td>
+                        <td>
+                            <input type="checkbox" id="map_center">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="map_scale">Centered map scale:</label>
+                        </td>
+                        <td>
+                            <input type="text" spellcheck="false" id="map_scale" 
+                                   class="input_number">
+                            <span class="text">pixels per nautical mile</span>
                         </td>
                     </tr>
                     <tr>

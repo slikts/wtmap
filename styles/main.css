@@ -14,6 +14,10 @@
 #wtm-options label[for=units-meters] {
     display: inline;
 }
+#wtm-options table .text {
+    position: relative;
+    top: -1px;
+}
 #wtm-options #installed {
     margin: 1.5em 0;
     display: none;
@@ -29,6 +33,7 @@
 #wtm-options #proximity_sound_file {
     width: 50em;
 }
+#wtm-options input[type=checkbox],
 #wtm-options #test_sound,
 #wtm-options input[type=text] {
     top: -2px;
@@ -39,10 +44,10 @@
 #wtm-options td {
     padding-left: 0;
 }
-
-#wtm-options #alert_volume,
-#wtm-options #proximity_radius,
-#wtm-options #plane_icon_size {
+#wtm-options .input_text {
+    width: 15em;
+}
+#wtm-options .input_number{
     width: 3em;
 }
 #wtm-options #plane_icon_preview {
