@@ -1,7 +1,7 @@
 ![logo](https://raw.github.com/slikts/wtmap/master/images/icon-128.png)
 
 WT map
-=======
+======
 
 WT map is a Chrome extension that enhances the browser-based map in
 [War Thunder](http://warthunder.com/). It can be used with multi-monitor
@@ -19,12 +19,13 @@ Features
 
  * Different plane icons for fighters, bombers and attackers
  * Plane icons show plane orientation
- * Proximity alert that plays a sound when the number of nearby enemies increases
+ * Proximity alert:
+   * Plays a sound when the number of nearby enemies increases
+   * Distance-based alert level
  * Automatic map centering and zooming on player
  * Configurable options:
    * Proximity alert radius and volume
    * Plane icon size
-   * Map centering/zooming
  * Info in page title:
    * Number of enemies within proximity radius
    * The distance to the closest enemy
@@ -83,6 +84,11 @@ increasing the update rate prevents the map image from being loaded.
 
 Changelog
 ---------
+
+**0.1.6** [2013-12-15]
+
+ * Added relative alert levels
+ * Various fixes
 
 **0.1.5** [2013-12-15]
 

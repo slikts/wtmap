@@ -22,8 +22,8 @@
         $proximity_radius.val(Math.round(WTM.m2x(WTM.settings.proximity_radius, units)));
     }
 
-    if (localStorage['options_installed'] !== 'true') {
-        localStorage['options_installed'] = 'true';
+    if (localStorage.options_installed !== 'true') {
+        localStorage.options_installed = 'true';
         $('#installed').show();
     }
 
@@ -108,7 +108,7 @@
             var key = $this.attr('id');
             var default_val = WTM.defaults[key];
             if (typeof default_val === 'number') {
-                val = parseInt(val, 10);
+                val = parseFloat(val, 10);
             }
             if (key === 'proximity_radius') {
                 val = WTM.x2m(val, units);
@@ -153,12 +153,22 @@
         });
         load_values();
 
-        display_status('Defaults restored')
+        display_status('Defaults restored');
     });
 
+    var $rel = $('#relative_alert_levels');
     $('#test_sound').click(function() {
-        WTM.play_sound($('#proximity_sound_file').val(),
-                parseFloat($('#alert_volume').val(), 10));
+        var volume = parseFloat($('#alert_volume').val(), 10);
+        if ($rel[0].checked) {
+            for (var i = 0, level = 0; i <= 10; i++) {
+                window.setTimeout(function() {
+                    WTM.play_alert(level, volume);
+                    level += 1;
+                }, 250 * i);
+            }
+        } else {
+            WTM.play_alert(0, volume);
+        }
         return false;
     });
 

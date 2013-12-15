@@ -1,14 +1,15 @@
 var WTM = {
     defaults: {
         proximity_radius: 5000,
-        proximity_sound_file: chrome.extension.getURL('sounds/chirp.ogg'),
         units: 'meters',
-        alert_volume: 0.15,
+        alert_volume: 0.3,
         plane_icon_size: 25,
         base_url: 'http://localhost:8111/',
         map_center: 1,
-        map_scale: 60
+        map_scale: 60,
+        relative_alert_levels: 1
     },
+    alert_sound: 'sounds/chirp',
     settings: {},
     update: function() {
         var settings = this.settings;
@@ -32,10 +33,26 @@ var WTM = {
         b: 1.08,
         c: 0.96
     },
-    play_sound: function(url, volume) {
+    play_alert: function(level, volume) {
+        level = level || 0;
+        volume = volume || this.settings.alert_volume;
+        var rel = WTM.settings.relative_alert_levels;
+        if (rel) {
+            volume = Math.min(1, volume + level * 0.035);
+        } else {
+            level = 0;
+        }
+        var url = chrome.extension.getURL(this.alert_sound + level + '.ogg');
         var audio = new Audio(url);
         audio.volume = volume;
         audio.play();
+        if (rel) {
+            window.setTimeout(function() {
+                var audio = new Audio(url);
+                audio.volume = volume * level * 0.05;
+                audio.play();
+            }, (30 - level) * 2);
+        }
     },
     conversion: {
         'meters': 1,

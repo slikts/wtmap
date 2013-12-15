@@ -1,10 +1,4 @@
 $.get(WTM.settings.base_url, function(data) {
-    var sound_file = WTM.settings['proximity_sound_file'];
-    var volume = WTM.settings.alert_volume;
-    function play_sound() {
-        WTM.play_sound(sound_file, volume);
-    }
-
     var _title = document.title;
 
     var $wtm_scripts = $('script');
@@ -45,6 +39,32 @@ $.get(WTM.settings.base_url, function(data) {
         });
     });
 
+    var _map_width, _map_height;
+
+    function get_distance(x1, y1, x2, y2) {
+        var dx = Math.abs(x1 - x2) * _map_width;
+        var dy = Math.abs(y1 - y2) * _map_height;
+
+        return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+    }
+
+    var _canvas, _ctx;
+
+    function _draw_text_icon(text, sx, sy, dir, color, font_size, font_face) {
+        font_face = font_face || 'plane_icons';
+        _ctx.save();
+        _ctx.translate(sx, sy);
+        _ctx.rotate(dir);
+        _ctx.textAlign = 'center';
+        _ctx.textBaseline = 'middle';
+        _ctx.fillStyle = color;
+        _ctx.lineWidth = 1;
+        _ctx.strokeStyle = '#000';
+        _ctx.font = font_size + "px " + font_face;
+        _ctx.fillText(text, 0, 0);
+        _ctx.strokeText(text, 0, 0);
+        _ctx.restore();
+    }
 
     function main() {
 
@@ -64,28 +84,26 @@ $.get(WTM.settings.base_url, function(data) {
 
             // Draw proximity radius circle
             if (map_info) {
-                var x = item['x'];
-                var y = item['y'];
+                var x = item.x;
+                var y = item.y;
 
                 var c_width = canvas.width;
                 var c_height = canvas.width;
 
-
-                if (!isDraggingMap && WTM.settings['map_center']) {
+                if (!isDraggingMap && WTM.settings.map_center) {
                     center_view(x, y, c_width, c_height);
                 }
 
                 var sx = _rel(x, 0, c_width);
                 var sy = _rel(y, 1, c_height);
-                var map_width_km = map_info['map_max'][0] - map_info['map_min'][0];
+                var map_width_km = map_info.map_max[0] - map_info.map_min[0];
 
                 ctx.beginPath();
-                ctx.arc(sx, sy, WTM.settings['proximity_radius'] * canvas.width / map_width_km * map_scale, 0, Math.PI * 2);
+                ctx.arc(sx, sy, WTM.settings.proximity_radius * canvas.width / map_width_km * map_scale, 0, Math.PI * 2);
                 ctx.strokeStyle = 'rgba(255, 255, 255, .25)';
                 ctx.lineWidth = 1;
                 ctx.stroke();
                 ctx.closePath();
-
             }
 
             return _draw_player.apply(this, arguments);
@@ -100,31 +118,18 @@ $.get(WTM.settings.base_url, function(data) {
 
         draw_map_object = function(canvas, ctx, item) {
 
-            var x = item['x'];
-            var y = item['y'];
+            var x = item.x;
+            var y = item.y;
 
-            var sx = _rel(x, 0, canvas.width);
-            var sy = _rel(y, 1, canvas.height);
+            var sx = _rel(x, 0, _canvas.width);
+            var sy = _rel(y, 1, _canvas.height);
 
-            if (item['type'] === 'aircraft') {
-                ctx.save();
-                ctx.translate(sx, sy);
-                var dir = Math.atan2(item['dx'], -item['dy']);
-                ctx.rotate(dir);
-
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillStyle = calcMapObjectColor(item);
-                ctx.lineWidth = 1;
-                ctx.strokeStyle = '#000';
-
-                var text = icon_texts[item['icon']];
-                var font_size = WTM.settings['plane_icon_size'] * WTM.icons[text];
-
-                ctx.font = font_size + "px plane_icons";
-                ctx.fillText(text, 0, 0);
-                ctx.strokeText(text, 0, 0);
-                ctx.restore();
+            if (item.type === 'aircraft') {
+                var dir = Math.atan2(item.dx, -item.dy);
+                var color = calcMapObjectColor(item);
+                var text = icon_texts[item.icon];
+                var font_size = WTM.settings.plane_icon_size * WTM.icons[text];
+                _draw_text_icon(text, sx, sy, dir, color, font_size);
             } else {
                 _draw_map_object.apply(this, arguments);
             }
@@ -136,25 +141,28 @@ $.get(WTM.settings.base_url, function(data) {
             'airfield': 1
         };
 
-        var last_proximate_enemies = 0;
+        var last_proximate_enemies = [];
+
+
+        var _alerts = [];
 
         var _update_object_positions = update_object_positions;
         update_object_positions = function(objects) {
             _player = null;
 
             objects.sort(function(a, b) {
-                if (a['icon'] === 'Player') {
+                if (a.icon === 'Player') {
                     _player = a;
                 }
                 // Put aircrafts at the end so they are drawn last
-                return (_type_priority[a['type']] || 0) > (_type_priority[b['type']] || 0);
+                return (_type_priority[a.type] || 0) > (_type_priority[b.type] || 0);
             });
+            var proximate_enemies = [];
             if (map_info && _player) {
-                var proximate_enemies = 0;
                 var min_distance = null;
                 var friendlies = 0;
                 $.each(objects, function(i, item) {
-                    if (item['type'] !== 'aircraft' || item['icon'] === 'Player') {
+                    if (item.type !== 'aircraft' || item.icon === 'Player') {
                         return;
                     }
                     var color = item['color[]'];
@@ -164,35 +172,46 @@ $.get(WTM.settings.base_url, function(data) {
                         return;
                     }
 
-                    var x = item['x'];
-                    var y = item['y'];
+                    var x = item.x;
+                    var y = item.y;
 
-                    var map_min = map_info['map_min'];
-                    var map_max = map_info['map_max'];
-                    var map_x = (map_max[0] - map_min[0]);
-                    var map_y = (map_max[1] - map_min[1]);
+                    var min_other_distance = null;
+                    $.each(last_proximate_enemies, function(i, coords) {
+                        var d = get_distance(x, y, coords[0], coords[1]);
+                        if (min_other_distance === null || d < min_other_distance) {
+                            min_other_distance = d;
+                        }
+                    });
 
-                    var distance_x = Math.abs(x - _player['x']) * map_x;
-                    var distance_y = Math.abs(y - _player['y']) * map_y;
-
-                    var distance = Math.sqrt(Math.pow(distance_x, 2) + Math.pow(distance_y, 2));
-
-                    if (min_distance === null) {
-                        min_distance = distance;
-                    } else {
-                        min_distance = Math.min(distance, min_distance);
-                    }
+                    var distance = get_distance(x, y, _player.x, _player.y);
 
                     if (distance < WTM.settings.proximity_radius) {
-                        proximate_enemies += 1;
+                        proximate_enemies.push([x, y, distance, min_other_distance]);
+                    }
+
+                    if (min_distance === null || distance < min_distance) {
+                        min_distance = distance;
                     }
                 });
-                if (proximate_enemies > last_proximate_enemies) {
-                    play_sound();
+
+                if (proximate_enemies.length > last_proximate_enemies.length) {
+                    var max_min_other_distance = null;
+                    var alert_distance = null;
+                    var alert = null;
+                    $.each(proximate_enemies, function(i, plane) {
+                        if (max_min_other_distance === null || plane[3] > max_min_other_distance) {
+                            max_min_other_distance = plane[3];
+                            alert_distance = plane[2];
+                            alert = plane;
+                        }
+                    });
+                    var alert_level = alert_distance === null ? 0 : Math.round(10 - alert_distance / WTM.settings.proximity_radius * 10);
+                    WTM.play_alert(alert_level);
+                    _alerts.push(alert);
                 }
                 var title_info = [];
-                if (proximate_enemies) {
-                    title_info.push('E:' + proximate_enemies);
+                if (proximate_enemies.length) {
+                    title_info.push('E:' + proximate_enemies.length);
                 }
                 if (min_distance !== null) {
                     var _units = WTM.settings.units === 'meters' ? 'km' : 'mi';
@@ -205,36 +224,42 @@ $.get(WTM.settings.base_url, function(data) {
 
                 last_proximate_enemies = proximate_enemies;
             }
+            last_proximate_enemies = proximate_enemies;
             _update_object_positions.apply(this, arguments);
         };
 
+        if (WTM.settings.map_center) {
+            clampMapPan = function() {
+            };
+        }
+
         var _update_map_info = update_map_info;
         update_map_info = function(info) {
-            var auto_scale = WTM.settings['map_center'];
+            var auto_scale = WTM.settings.map_center;
             var prevMapGen, newMapGen;
 
             if (auto_scale) {
-                prevMapGen = (map_info && ('map_generation' in map_info)) ? map_info['map_generation'] : -1;
-                newMapGen = (info && ('map_generation' in info)) ? info['map_generation'] : -1;
+                prevMapGen = (map_info && ('map_generation' in map_info)) ? map_info.map_generation : -1;
+                newMapGen = (info && ('map_generation' in info)) ? info.map_generation : -1;
             }
 
             _update_map_info.apply(this, arguments);
 
-            if (auto_scale && prevMapGen != newMapGen) {
-                var canvas = document.getElementById('map-canvas');
-                var map_width_km = map_info['map_max'][0] - map_info['map_min'][0];
+            var map_min = info.map_min;
+            var map_max = info.map_max;
 
-                map_scale = WTM.m2x(map_width_km * WTM.settings['map_scale'] / canvas.width, 'nmi');
+            _map_width = map_max[0] - map_min[0];
+            _map_height = map_max[1] - map_min[0];
+
+            if (auto_scale && prevMapGen != newMapGen) {
+                map_scale = WTM.m2x(_map_width * WTM.settings.map_scale / _canvas.width, 'nmi');
             }
         };
 
-        //    var _ = ;
-        //     = function() {
-        //        var results = _.apply(this, arguments);
-        //        return results;
-        //    };
-
         init();
+
+        _canvas = document.getElementById('map-canvas');
+        _ctx = _canvas.getContext('2d');
     }
 }).fail(function() {
     window.location.href = 'error.html';
