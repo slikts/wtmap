@@ -13,11 +13,7 @@ Features
 
 ![map screenshot](https://raw.github.com/slikts/wtmap/master/images/screenshot.png)
 
-Map
-
 ![options screenshot](https://raw.github.com/slikts/wtmap/master/images/options.png)
-
-Options
 
 #### New
 
