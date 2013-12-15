@@ -49,9 +49,13 @@ var WTM = {
         if (rel) {
             window.setTimeout(function() {
                 var audio = new Audio(url);
-                audio.volume = volume * level * 0.05;
+                var echo_volume = Math.max(0, volume  * level * 0.05 - Math.max(0, 0.15 - level * 0.05));
+                if (!echo_volume) {
+                    return;
+                }
+                audio.volume = echo_volume ;
                 audio.play();
-            }, (30 - level) * 2);
+            }, 40 - level);
         }
     },
     conversion: {
