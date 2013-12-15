@@ -49,7 +49,7 @@ $.get(WTM.settings.base_url, function(data) {
     function main() {
 
         var _player;
-        
+
         function center_view(x, y, c_width, c_height) {
             map_pan[0] = -(x * c_width * map_scale) + c_width / 2;
             map_pan[1] = -(y * c_width * map_scale) + c_height / 2;
@@ -69,16 +69,16 @@ $.get(WTM.settings.base_url, function(data) {
 
                 var c_width = canvas.width;
                 var c_height = canvas.width;
-                
+
 
                 if (!isDraggingMap && WTM.settings['map_center']) {
                     center_view(x, y, c_width, c_height);
                 }
-                
+
                 var sx = _rel(x, 0, c_width);
                 var sy = _rel(y, 1, c_height);
                 var map_width_km = map_info['map_max'][0] - map_info['map_min'][0];
-                
+
                 ctx.beginPath();
                 ctx.arc(sx, sy, WTM.settings['proximity_radius'] * canvas.width / map_width_km * map_scale, 0, Math.PI * 2);
                 ctx.strokeStyle = 'rgba(255, 255, 255, .25)';
@@ -102,7 +102,7 @@ $.get(WTM.settings.base_url, function(data) {
 
             var x = item['x'];
             var y = item['y'];
-            
+
             var sx = _rel(x, 0, canvas.width);
             var sy = _rel(y, 1, canvas.height);
 
@@ -212,22 +212,22 @@ $.get(WTM.settings.base_url, function(data) {
         update_map_info = function(info) {
             var auto_scale = WTM.settings['map_center'];
             var prevMapGen, newMapGen;
-            
+
             if (auto_scale) {
                 prevMapGen = (map_info && ('map_generation' in map_info)) ? map_info['map_generation'] : -1;
                 newMapGen = (info && ('map_generation' in info)) ? info['map_generation'] : -1;
             }
 
             _update_map_info.apply(this, arguments);
-            
+
             if (auto_scale && prevMapGen != newMapGen) {
                 var canvas = document.getElementById('map-canvas');
                 var map_width_km = map_info['map_max'][0] - map_info['map_min'][0];
-                
+
                 map_scale = WTM.m2x(map_width_km * WTM.settings['map_scale'] / canvas.width, 'nmi');
             }
         };
-        
+
         //    var _ = ;
         //     = function() {
         //        var results = _.apply(this, arguments);

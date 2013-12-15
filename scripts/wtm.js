@@ -21,7 +21,7 @@ var WTM = {
             }
             settings[key] = result;
         });
-        
+
         settings.base_url = settings.base_url.replace(/\/+$/, '') + '/';
         if (!/https?:\/\//.test(settings.base_url)) {
             settings.base_url = 'http://' + settings.base_url;

@@ -7,7 +7,7 @@
 
     var $plane_icon_preview = $('#plane_icon_preview');
     var $plane_icon_size = $('#plane_icon_size');
-    
+
     var $proximity_radius = $('#proximity_radius');
     var $unit_label = $('#unit_label');
 
@@ -44,7 +44,7 @@
     }
 
     $plane_icon_size.keyup(update_icons);
-    
+
     var $unit_inputs = $inputs.filter('[name=units]');
     $unit_inputs.change(function() {
         var $this = $(this);
@@ -53,7 +53,7 @@
         $this.data('changed', val !== WTM.settings.units);
         update_proximity_radius(val);
     });
-    
+
     $checkbox_inputs.change(function() {
         var $this = $(this);
         $this.data('changed', this.checked * 1 !== WTM.settings[$this.attr('id')]);
@@ -71,13 +71,13 @@
             }
             $this.val(val);
         });
-        
+
         $checkbox_inputs.each(function() {
             var $this = $(this);
             this.checked = !!settings[$this.attr('id')];
             $this.data('changed', false);
         });
-        
+
         update_proximity_radius();
         $unit_inputs.data('changed', false);
         $unit_inputs.filter('[value=' + settings.units + ']').click();
@@ -120,19 +120,19 @@
             }
             localStorage[key] = val;
         });
-        
+
         $checkbox_inputs.each(function() {
             var $this = $(this);
             var val = this.checked * 1;
             var key = $this.attr('id');
-            
+
             if (val === WTM.defaults[key]) {
                 localStorage.removeItem(key);
             } else {
                 localStorage[key] = val;
             }
         });
-        
+
         localStorage.units = units;
         WTM.update();
         load_values();

@@ -1,10 +1,10 @@
 @font-face {
-    font-family: 'Communist'; 
-    src: url('chrome-extension://__MSG_@@extension_id__/fonts/communist.ttf'); 
+    font-family: 'Communist';
+    src: url('chrome-extension://__MSG_@@extension_id__/fonts/communist.ttf');
 }
 @font-face {
-    font-family: 'plane_icons'; 
-    src: url('chrome-extension://__MSG_@@extension_id__/fonts/icons.ttf'); 
+    font-family: 'plane_icons';
+    src: url('chrome-extension://__MSG_@@extension_id__/fonts/icons.ttf');
 }
 
 #wtm-options label {
