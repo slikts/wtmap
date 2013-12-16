@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "WT map",
     "description": "Adds proximity alert and other enhancements to the War Thunder browser map.",
-    "version": "0.1.6",
+    "version": "0.1.7",
     "permissions": [
         "http://localhost:8111/"
     ],
