@@ -78,7 +78,7 @@ The idea of making this extension comes from the
 Android app.
 
 The icons for the planes are P-39 for fighters, IL-2 for attackers
-and He 88 for bombers.
+and Ju 88 for bombers.
 
 The map uses a 500 ms interval for updating objects, and for some reason
 increasing the update rate prevents the map image from being loaded.
