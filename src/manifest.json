@@ -3,6 +3,7 @@
     "name": "WT map",
     "description": "Adds proximity alert and other enhancements to the War Thunder browser map.",
     "version": "0.1.7",
+    "author": "slikts <dabas@untu.ms",
     "permissions": [
         "http://localhost:8111/"
     ],
