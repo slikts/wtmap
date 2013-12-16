@@ -25,27 +25,6 @@
                     </colgroup>
                     <tr>
                         <td>
-                            <label for="proximity_radius">Proximity alert radius:</label>
-                        </td>
-                        <td>
-                            <input type="text" id="proximity_radius"
-                                   class="input_number">
-                            <span class="text" id="unit_label"></span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Units:</label>
-                        </td>
-                        <td>
-                            <input type="radio" value="meters" id="units-meters" name="units">
-                            <label for="units-meters">Meters</label>
-                            <input type="radio" value="feet" id="units-feet" name="units">
-                            <label for="units-feet">Feet</label>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
                             <label for="plane_icon_size">Plane icon size:</label>
                         </td>
                         <td>
@@ -53,32 +32,6 @@
                                    class="input_number">
                             <span class="text">pixels</span>
                             <span id="plane_icon_preview"></span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="alert_volume">Alert volume:</label>
-                        </td>
-                        <td>
-                            <input type="text" spellcheck="false" id="alert_volume"
-                                   class="input_number">
-                            <button id="test_sound">Test</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="relative_alert_levels">Relative alert levels:</label>
-                        </td>
-                        <td>
-                            <input type="checkbox" id="relative_alert_levels">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <span class="text">
-                                (The alert sound changes
-                                based on distance to the enemy)
-                            </span>
                         </td>
                     </tr>
                     <tr>
@@ -96,6 +49,22 @@
                         </td>
                         <td>
                             <input type="checkbox" id="map_center">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Units:</label>
+                        </td>
+                        <td>
+                            <input type="radio" value="meters" id="units-meters" name="units">
+                            <label for="units-meters">Meters</label>
+                            <input type="radio" value="feet" id="units-feet" name="units">
+                            <label for="units-feet">Feet</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <span class="text">(Used in the title bar to show the closest enemy)</span>
                         </td>
                     </tr>
                     <tr>

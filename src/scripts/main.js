@@ -82,29 +82,8 @@ $.get(WTM.settings.base_url, function(data) {
 
         var _draw_player = draw_player;
         draw_player = function(canvas, ctx, item, dt) {
-
-            // Draw proximity radius circle
-            if (map_info) {
-                var x = item.x;
-                var y = item.y;
-
-                var c_width = canvas.width;
-                var c_height = canvas.width;
-
-                if (!isDraggingMap && WTM.settings.map_center) {
-                    center_view(x, y, c_width, c_height);
-                }
-
-                var sx = _rel(x, 0, c_width);
-                var sy = _rel(y, 1, c_height);
-                var map_width_km = map_info.map_max[0] - map_info.map_min[0];
-
-                ctx.beginPath();
-                ctx.arc(sx, sy, WTM.settings.proximity_radius * canvas.width / map_width_km * map_scale, 0, Math.PI * 2);
-                ctx.strokeStyle = 'rgba(255, 255, 255, .25)';
-                ctx.lineWidth = 1;
-                ctx.stroke();
-                ctx.closePath();
+            if (!isDraggingMap && WTM.settings.map_center) {
+                center_view(item.x, item.y, canvas.width, canvas.height);
             }
 
             return _draw_player.apply(this, arguments);
@@ -142,8 +121,6 @@ $.get(WTM.settings.base_url, function(data) {
             'airfield': 1
         };
 
-        var last_proximate_enemies = [];
-
         var _update_object_positions = update_object_positions;
         update_object_positions = function(objects) {
             _player = null;
@@ -155,60 +132,37 @@ $.get(WTM.settings.base_url, function(data) {
                 // Put aircrafts at the end so they are drawn last
                 return (_type_priority[a.type] || 0) > (_type_priority[b.type] || 0);
             });
-            var proximate_enemies = [];
             if (map_info && _player) {
                 var min_distance = null;
                 var friendlies = 0;
+                var enemies = 0;
                 $.each(objects, function(i, item) {
                     if (item.type !== 'aircraft' || item.icon === 'Player') {
                         return;
                     }
                     var color = item['color[]'];
                     if (color[0] < color[2]) {
-                        // Skip friendlies
                         friendlies += 1;
                         return;
+                    } else {
+                        enemies += 1;
                     }
 
                     var x = item.x;
                     var y = item.y;
 
                     var min_other_distance = null;
-                    $.each(last_proximate_enemies, function(i, coords) {
-                        var d = get_distance(x, y, coords[0], coords[1]);
-                        if (min_other_distance === null || d < min_other_distance) {
-                            min_other_distance = d;
-                        }
-                    });
 
                     var distance = get_distance(x, y, _player.x, _player.y);
-
-                    if (distance < WTM.settings.proximity_radius) {
-                        proximate_enemies.push([x, y, distance, min_other_distance]);
-                    }
 
                     if (min_distance === null || distance < min_distance) {
                         min_distance = distance;
                     }
                 });
 
-                if (proximate_enemies.length > last_proximate_enemies.length) {
-                    var max_min_other_distance = null;
-                    var alert_distance = null;
-                    var alert = null;
-                    $.each(proximate_enemies, function(i, plane) {
-                        if (max_min_other_distance === null || plane[3] > max_min_other_distance) {
-                            max_min_other_distance = plane[3];
-                            alert_distance = plane[2];
-                            alert = plane;
-                        }
-                    });
-                    var alert_level = alert_distance === null ? 0 : Math.round(10 - alert_distance / WTM.settings.proximity_radius * 10);
-                    WTM.play_alert(alert_level);
-                }
                 var title_info = [];
-                if (proximate_enemies.length) {
-                    title_info.push('E:' + proximate_enemies.length);
+                if (enemies) {
+                    title_info.push('E:' + enemies);
                 }
                 if (min_distance !== null) {
                     var _units = WTM.settings.units === 'meters' ? 'km' : 'mi';
@@ -218,10 +172,7 @@ $.get(WTM.settings.base_url, function(data) {
                 title_info.push('F:' + friendlies);
 
                 document.title = '(' + title_info.join(' ') + ') ' + _title;
-
-                last_proximate_enemies = proximate_enemies;
             }
-            last_proximate_enemies = proximate_enemies;
             _update_object_positions.apply(this, arguments);
         };
 
