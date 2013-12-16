@@ -86,7 +86,7 @@ increasing the update rate prevents the map image from being loaded.
 Changelog
 ---------
 
-**0.1.7** [2013-12-15]
+**0.1.7** [2013-12-16]
 
  * Make it possible to set proximity alert volume or radius to 0 to disable it
  * Prevent the centered map panning out of bounds
