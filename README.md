@@ -3,10 +3,11 @@
 WT map
 ======
 
-WT map is a Chrome extension that enhances the browser-based map in
+WT map is a Chrome extension that modifies the browser-based map in
 [War Thunder](http://warthunder.com/). It can be used with multi-monitor
 setups or on a different device from the one running the game. The purpose
-of the map is to help improve situational awareness.
+of the extension is to help improve situational awareness by adding a level
+of nicety to the map presentation.
 
 Features
 --------
@@ -21,7 +22,7 @@ Features
  * Plane icons show plane orientation
  * Proximity alert:
    * Plays a sound when the number of nearby enemies increases
-   * Distance-based alert level
+   * Distance-based alert level (alerts sound different the closer the enemy is)
  * Automatic map centering and zooming on player
  * Configurable options:
    * Proximity alert radius and volume
