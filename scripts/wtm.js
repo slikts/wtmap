@@ -36,6 +36,9 @@ var WTM = {
     play_alert: function(level, volume) {
         level = level || 0;
         volume = volume || this.settings.alert_volume;
+        if (!volume) {
+            return;
+        }
         var rel = WTM.settings.relative_alert_levels;
         if (rel) {
             volume = Math.min(1, volume + level * 0.035);

@@ -73,6 +73,7 @@ $.get(WTM.settings.base_url, function(data) {
         function center_view(x, y, c_width, c_height) {
             map_pan[0] = -(x * c_width * map_scale) + c_width / 2;
             map_pan[1] = -(y * c_width * map_scale) + c_height / 2;
+            clampMapPan();
         }
 
         function _rel(a, b, c) {
@@ -143,9 +144,6 @@ $.get(WTM.settings.base_url, function(data) {
 
         var last_proximate_enemies = [];
 
-
-        var _alerts = [];
-
         var _update_object_positions = update_object_positions;
         update_object_positions = function(objects) {
             _player = null;
@@ -207,7 +205,6 @@ $.get(WTM.settings.base_url, function(data) {
                     });
                     var alert_level = alert_distance === null ? 0 : Math.round(10 - alert_distance / WTM.settings.proximity_radius * 10);
                     WTM.play_alert(alert_level);
-                    _alerts.push(alert);
                 }
                 var title_info = [];
                 if (proximate_enemies.length) {
@@ -227,11 +224,6 @@ $.get(WTM.settings.base_url, function(data) {
             last_proximate_enemies = proximate_enemies;
             _update_object_positions.apply(this, arguments);
         };
-
-        if (WTM.settings.map_center) {
-            clampMapPan = function() {
-            };
-        }
 
         var _update_map_info = update_map_info;
         update_map_info = function(info) {

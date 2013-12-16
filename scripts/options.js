@@ -104,7 +104,7 @@
 
         $text_inputs.each(function() {
             var $this = $(this);
-            var val = $this.val();
+            var val = $this.val().trim();
             var key = $this.attr('id');
             var default_val = WTM.defaults[key];
             if (typeof default_val === 'number') {
@@ -113,7 +113,7 @@
             if (key === 'proximity_radius') {
                 val = WTM.x2m(val, units);
             }
-            if (!val || val === default_val) {
+            if ((!val && val !== 0) || val === default_val) {
                 // Reset to default
                 localStorage.removeItem(key);
                 return;
