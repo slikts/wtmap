@@ -9,12 +9,14 @@ setups or on a different device from the one running the game. The purpose
 of the extension is to help improve situational awareness by adding a level
 of nicety to the map presentation.
 
+[![How to use](https://raw.github.com/slikts/wtmap/master/youtube.png)](http://youtu.be/fOV34dUWJ-g)
+
 Features
 --------
 
-![map screenshot](https://raw.github.com/slikts/wtmap/master/images/screenshot.png)
+![Map screenshot](https://raw.github.com/slikts/wtmap/master/screenshot.png)
 
-![options screenshot](https://raw.github.com/slikts/wtmap/master/images/options.png)
+![Options screenshot](https://raw.github.com/slikts/wtmap/master/options.png)
 
 #### New
 
