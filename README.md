@@ -9,8 +9,6 @@ setups or on a different device from the one running the game. The purpose
 of the extension is to help improve situational awareness by adding a level
 of nicety to the map presentation.
 
-[![How to use](https://raw.github.com/slikts/wtmap/master/youtube.png)](http://youtu.be/fOV34dUWJ-g)
-
 Features
 --------
 
@@ -18,27 +16,15 @@ Features
 
 ![Options screenshot](https://raw.github.com/slikts/wtmap/master/options.png)
 
-#### New
-
  * Different plane icons for fighters, bombers and attackers
  * Plane icons show plane orientation
- * Proximity alert:
-   * Plays a sound when the number of nearby enemies increases
-   * Distance-based alert level (alerts sound different the closer the enemy is)
  * Automatic map centering and zooming on player
- * Configurable options:
-   * Proximity alert radius and volume
-   * Plane icon size
+ * Configurable plane icon size
  * Info in page title:
-   * Number of enemies within proximity radius
+   * The number of spotted enemies
    * The distance to the closest enemy
    * The total number of allied planes
  * Ground units never obscure plane icons
-
-#### Planned
-
- * Configurable sound for proximity alert
- * Firefox version (?)
 
 Installation
 ------------
@@ -87,6 +73,10 @@ increasing the update rate prevents the map image from being loaded.
 
 Changelog
 ---------
+
+**0.2.1** [2013-12-16]
+
+ * Removed proximity alerts
 
 **0.1.7** [2013-12-16]
 
