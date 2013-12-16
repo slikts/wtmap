@@ -1,4 +1,4 @@
-![logo](https://raw.github.com/slikts/wtmap/master/images/icon-128.png)
+![logo](https://raw.github.com/slikts/wtmap/master/src/images/icon-128.png)
 
 WT map
 ======
