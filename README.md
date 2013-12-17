@@ -75,6 +75,10 @@ and Ju 88 for bombers.
 Changelog
 ---------
 
+**0.2.3** [2013-12-17]
+
+ * Fixed zoom bug
+
 **0.2.2** [2013-12-17]
 
  * Added advanced options to disable cockpit gauge, chat and HUD message panels
