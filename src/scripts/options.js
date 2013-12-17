@@ -157,8 +157,20 @@
         $(this).attr('disabled', 'disabled');
     });
 
-    $('#goto a').mousedown(function() {
-        $(this).text('WT map');
+    $('#goto a').each(function() {
+        var $this = $(this);
+        $('<a id="goto_sub">')
+                .attr('href', $this.attr('href'))
+                .text('WT map')
+                .mousedown(function() {
+                    $this.addClass('active');
+                })
+                .mouseup(function() {
+                    $this.removeClass('active');
+                })
+                .mouseleave(function() {
+                    $this.removeClass('active');
+                })
+                .appendTo($this.parent());
     });
-
 })();
