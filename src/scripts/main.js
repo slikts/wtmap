@@ -1,6 +1,10 @@
 $.get(WTM.settings.base_url, function(data) {
     var _title = document.title;
 
+    if (!localStorage.persist_scale) {
+        localStorage.persist_scale = "0.00005";
+    }
+
     var $wtm_scripts = $('script');
 
     $(document.body).html(data
