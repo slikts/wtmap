@@ -36,15 +36,6 @@
                     </tr>
                     <tr>
                         <td>
-                            <label for="base_url">Map location:</label>
-                        </td>
-                        <td>
-                            <input type="text" spellcheck="false" id="base_url"
-                                   class="input_text">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
                             <label for="map_center">Center map on player:</label>
                         </td>
                         <td>
@@ -69,12 +60,11 @@
                     </tr>
                     <tr>
                         <td>
-                            <label for="map_scale">Centered map scale:</label>
+                            <label for="base_url">Map location:</label>
                         </td>
                         <td>
-                            <input type="text" spellcheck="false" id="map_scale"
-                                   class="input_number">
-                            <span class="text">pixels per nautical mile</span>
+                            <input type="text" spellcheck="false" id="base_url"
+                                   class="input_text">
                         </td>
                     </tr>
                     <tr>
@@ -86,6 +76,50 @@
                                 and that the network setup allows it (for instance, if
                                 it's possible to connect from wireless to wired devices).
                             </span>
+                        </td>
+                    </tr>
+                    <tr id="show_advanced">
+                        <td colspan="2">
+                            <p>Advanced Options <button>Show</button></p>
+                        </td>
+                    </tr>
+                    <tr class="advanced">
+                        <td>
+                            <label for="object_update_rate">Object poll rate:</label>
+                        </td>
+                        <td>
+                            <input type="text" spellcheck="false" id="object_update_rate"
+                                   class="input_number">
+                            <span class="text">milliseconds</span>
+                        </td>
+                    </tr>
+                    <tr class="advanced">
+                        <td colspan="2">
+                            <span class="text">(How fast the map objects are updated)</span>
+                        </td>
+                    </tr>
+                    <tr class="advanced">
+                        <td>
+                            <label for="update_indicators">Update cockpit indicators:</label>
+                        </td>
+                        <td>
+                            <input type="checkbox" id="update_indicators">
+                        </td>
+                    </tr>
+                    <tr class="advanced">
+                        <td>
+                            <label for="update_chat">Update chat:</label>
+                        </td>
+                        <td>
+                            <input type="checkbox" id="update_chat">
+                        </td>
+                    </tr>
+                    <tr class="advanced">
+                        <td>
+                            <label for="update_hud">Update HUD messages:</label>
+                        </td>
+                        <td>
+                            <input type="checkbox" id="update_hud">
                         </td>
                     </tr>
                 </table>

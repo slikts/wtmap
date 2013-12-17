@@ -7,6 +7,13 @@
     src: url('chrome-extension://__MSG_@@extension_id__/fonts/icons.ttf');
 }
 
+#wtm-wrapper h1,
+#wtm-wrapper h2,
+#wtm-wrapper h3,
+#wtm-wrapper h4,
+#wtm-wrapper h5 {
+    font-weight: normal;
+}
 #wtm-options label {
     display: block;
 }
@@ -81,4 +88,41 @@
 #wtm-options label[for=units-meters],
 #wtm-wrapper .text {
     font-size: 12px;
+}
+
+
+#mission-objectives,
+#game-chat-root,
+#hud-evt-msg-root,
+#hud-dmg-msg-root,
+#indicators-root {
+    visibility: hidden;
+    z-index: -1;
+}
+#mission-objectives.show,
+#game-chat-root.show,
+#hud-evt-msg-root.show,
+#hud-dmg-msg-root.show,
+#indicators-root.show {
+    z-index: 0;
+    visibility: visible;
+}
+
+#wtm-options #show_advanced p {
+    text-align: center;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+#wtm-options tr.advanced {
+    display: none;
+}
+
+#wtm-options #goto a {
+    font-size: 1.15em;
+}
+#wtm-options #goto {
+    background: rgba(255, 255, 0, .15);
+    padding: .3em .5em .2em;
+    text-align: center;
 }

@@ -11,6 +11,7 @@ $.get(WTM.settings.base_url, function(data) {
     var scripts = [];
     var $scripts = $('script').not($wtm_scripts);
     var $eval = $([]);
+    var _settings = WTM.settings;
     $scripts.each(function() {
         var $this = $(this);
         var src = $this.data('src');
@@ -40,6 +41,7 @@ $.get(WTM.settings.base_url, function(data) {
     });
 
     var _map_width, _map_height;
+    var _canvas, _ctx;
 
     function get_distance(x1, y1, x2, y2) {
         var dx = Math.abs(x1 - x2) * _map_width;
@@ -47,8 +49,6 @@ $.get(WTM.settings.base_url, function(data) {
 
         return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
     }
-
-    var _canvas, _ctx;
 
     function _draw_text_icon(text, sx, sy, dir, color, font_size, font_face) {
         font_face = font_face || 'plane_icons';
@@ -151,8 +151,6 @@ $.get(WTM.settings.base_url, function(data) {
                     var x = item.x;
                     var y = item.y;
 
-                    var min_other_distance = null;
-
                     var distance = get_distance(x, y, _player.x, _player.y);
 
                     if (min_distance === null || distance < min_distance) {
@@ -177,15 +175,8 @@ $.get(WTM.settings.base_url, function(data) {
         };
 
         var _update_map_info = update_map_info;
+        var _initial_scale = false;
         update_map_info = function(info) {
-            var auto_scale = WTM.settings.map_center;
-            var prevMapGen, newMapGen;
-
-            if (auto_scale) {
-                prevMapGen = (map_info && ('map_generation' in map_info)) ? map_info.map_generation : -1;
-                newMapGen = (info && ('map_generation' in info)) ? info.map_generation : -1;
-            }
-
             _update_map_info.apply(this, arguments);
 
             var map_min = info.map_min;
@@ -194,15 +185,77 @@ $.get(WTM.settings.base_url, function(data) {
             _map_width = map_max[0] - map_min[0];
             _map_height = map_max[1] - map_min[0];
 
-            if (auto_scale && prevMapGen != newMapGen) {
-                map_scale = WTM.m2x(_map_width * WTM.settings.map_scale / _canvas.width, 'nmi');
+            if (!_initial_scale) {
+                map_scale = _map_width * parseFloat(localStorage.persist_scale, 10);
+                _initial_scale = true;
             }
+        };
+
+        function xhr_onload(handler) {
+            if (this.responseText) {
+                handler(JSON.parse(this.responseText));
+            }
+        }
+
+        function get_xhr(url, handler) {
+            var xhr = new XMLHttpRequest();
+            xhr.onload = xhr_onload.bind(xhr, handler);
+            xhr.open('GET', url, true);
+            xhr.send();
+        }
+
+        WTM.get_object_positions = get_xhr.bind(WTM, '/map_obj.json', update_object_positions);
+        window.setInterval(WTM.get_object_positions, _settings.object_update_rate);
+        WTM.get_object_positions();
+        WTM.get_map_info = get_xhr.bind(WTM, '/map_info.json', update_map_info);
+        window.setInterval(WTM.get_map_info, 5000);
+        WTM.get_map_info();
+        if (_settings.update_hud) {
+            $('#hud-evt-msg-root').addClass('show');
+            $('#hud-dmg-msg-root').addClass('show');
+        }
+        if (_settings.update_chat) {
+            $('#game-chat-root').addClass('show');
+        }
+        if (_settings.update_indicators) {
+            $('#indicators-root').addClass('show');
+        }
+        updateSlow = function() {
+            //'/hudmsg', data:{'lastEvt':lastEvtMsgId, 'lastDmg':lastDmgMsgId} update_hud_msg
+            if (_settings.update_hud) {
+                get_xhr('/hudmsg?lastEvt=' + lastEvtMsgId + '&lastDmg=' + lastDmgMsgId, update_hud_msg);
+            }
+            if (_settings.update_chat) {
+                get_xhr('/gamechat?lastId='+lastChatRecId, update_game_chat);
+            }
+            if (_settings.update_indicators) {
+                get_xhr('/indicators', update_indicators);
+            }
+        };
+
+        var _addWheelHandler = addWheelHandler;
+        addWheelHandler = function(elem, onWheel) {
+            var _onWheel = onWheel;
+            
+            onWheel = function() {
+                _onWheel.apply(this, arguments);
+                localStorage.persist_scale = map_scale / _map_width;
+            };
+
+            return _addWheelHandler.apply(this, arguments);
         };
 
         init();
 
-        _canvas = document.getElementById('map-canvas');
+        var $canvas = $('#map-canvas');
+        _canvas = $canvas[0];
         _ctx = _canvas.getContext('2d');
+
+        var _option_stop = $canvas.resizable('option', 'stop');
+        $canvas.resizable('option', 'stop', function(event, ui) {
+            map_scale = map_scale / (ui.size.width / _canvas.width);
+            _option_stop.apply(this, arguments);
+        });
     }
 }).fail(function() {
     window.location.href = 'error.html';

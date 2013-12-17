@@ -152,4 +152,13 @@
         }
     };
 
+    $('#show_advanced button').click(function() {
+        $('tr.advanced').show();
+        $(this).attr('disabled', 'disabled');
+    });
+
+    $('#goto a').mousedown(function() {
+        $(this).text('WT map');
+    });
+
 })();
