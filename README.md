@@ -9,6 +9,9 @@ setups or on a different device from the one running the game. The purpose
 of the extension is to help improve situational awareness by adding a level
 of nicety to the map presentation.
 
+Using WT map currently is
+[within the Terms of Service](http://www.reddit.com/r/Warthunder/comments/1l5489/war_thunder_tactical_map_useful_app_for_android/cc4zudq).
+
 Features
 --------
 
