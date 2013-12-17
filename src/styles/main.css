@@ -121,8 +121,26 @@
 #wtm-options #goto a {
     font-size: 1.15em;
 }
+#wtm-options #goto_link {
+    position: relative;
+}
+#wtm-options #goto_sub {
+    position: absolute;
+    left: -5%;
+    top: 0;
+    background: #f06;
+    width: 110%;
+    height: 120%;
+    margin-top: -5%;
+    opacity: 0;
+}
 #wtm-options #goto {
     background: rgba(255, 255, 0, .15);
     padding: .3em .5em .2em;
     text-align: center;
+}
+
+#wtm-options a.active,
+#wtm-options a:active {
+    color: #f06;
 }
