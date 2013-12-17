@@ -12,12 +12,13 @@ of nicety to the map presentation.
 Features
 --------
 
-![Map screenshot](https://raw.github.com/slikts/wtmap/master/screenshot.png)
+![Map Screenshot](https://raw.github.com/slikts/wtmap/master/screenshot.png)
 
-![Options screenshot](https://raw.github.com/slikts/wtmap/master/options.png)
+![Options Screenshot](https://raw.github.com/slikts/wtmap/master/options.png)
 
  * Different plane icons for fighters, bombers and attackers
  * Plane icons show plane orientation
+ * Closer to real-time updating
  * Automatic map centering and zooming on player
  * Configurable plane icon size
  * Info in page title:
@@ -68,11 +69,14 @@ Android app.
 The icons for the planes are P-39 for fighters, IL-2 for attackers
 and Ju 88 for bombers.
 
-The map uses a 500 ms interval for updating objects, and for some reason
-increasing the update rate prevents the map image from being loaded.
-
 Changelog
 ---------
+
+**0.2.2** [2013-12-17]
+
+ * Added advanced options to disable cockpit gauge, chat and HUD message panels
+ * Significantly increased polling rate of map objects (configurable)
+ * Added automatic persistent zoom instead of a configuration option
 
 **0.2.1** [2013-12-16]
 
@@ -80,8 +84,8 @@ Changelog
 
 **0.1.7** [2013-12-16]
 
- * Make it possible to set proximity alert volume or radius to 0 to disable it
- * Prevent the centered map panning out of bounds
+ * Made it possible to set proximity alert volume or radius to 0 to disable it
+ * Fixed the centered map panning out of bounds
 
 **0.1.6** [2013-12-15]
 
