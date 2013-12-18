@@ -78,6 +78,11 @@ and Ju 88 for bombers.
 Changelog
 ---------
 
+**0.2.5** [2013-12-18]
+
+ * Add support for the new "state" panel in 1.37
+ * Fix an issue with persistent zoom levels
+
 **0.2.4** [2013-12-18]
 
  * Display off-screen aircraft when zoomed in
