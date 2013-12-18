@@ -30,7 +30,9 @@ Features
    * The distance to the closest enemy
    * The total number of allied planes
  * Ground units never obscure plane icons
- * Off-screen aircraft are displayed at the map edge when zoomed in
+ * Off-screen aircraft are displayed at the map edge when zoomed in:
+
+![Panning](https://raw.github.com/slikts/wtmap/master/pan.gif)
 
 Installation
 ------------
