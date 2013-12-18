@@ -54,26 +54,45 @@ $.get(WTM.settings.base_url, function(data) {
         return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
     }
 
-    function _draw_text_icon(text, sx, sy, dir, color, font_size, font_face) {
+    function hex_to_rgba(hex, alpha) {
+        return 'rgba(' + [parseInt(hex.substr(1, 2), 16),
+            parseInt(hex.substr(3, 2), 16),
+            parseInt(hex.substr(5, 2), 16)].join(',') +
+                ',' + alpha + ')';
+    }
+
+    function _draw_text_icon(text, sx, sy, dir, fill,
+            alpha, font_size, font_face, stroke, text_align, text_baseline) {
+        if (alpha) {
+            if (fill) {
+                fill = hex_to_rgba(fill, alpha);
+            }
+            if (stroke) {
+                stroke = hex_to_rgba(stroke, alpha);
+            }
+        }
         font_face = font_face || 'plane_icons';
+        text_align = text_align || 'center';
+        text_baseline = text_baseline || 'middle';
         _ctx.save();
         _ctx.translate(sx, sy);
         _ctx.rotate(dir);
-        _ctx.textAlign = 'center';
-        _ctx.textBaseline = 'middle';
-        _ctx.fillStyle = color;
+        _ctx.textAlign = text_align;
+        _ctx.textBaseline = text_baseline;
+        _ctx.fillStyle = fill;
+        _ctx.strokeStyle = stroke;
         _ctx.lineWidth = 1;
-        _ctx.strokeStyle = '#000';
         _ctx.font = font_size + "px " + font_face;
         _ctx.fillText(text, 0, 0);
-        _ctx.strokeText(text, 0, 0);
+        if (stroke) {
+            _ctx.strokeText(text, 0, 0);
+        }
         _ctx.restore();
     }
 
     function main() {
 
         var _player;
-
         function center_view(x, y, c_width, c_height) {
             map_pan[0] = -(x * c_width * map_scale) + c_width / 2;
             map_pan[1] = -(y * c_width * map_scale) + c_height / 2;
@@ -113,7 +132,49 @@ $.get(WTM.settings.base_url, function(data) {
                 var color = calcMapObjectColor(item);
                 var text = icon_texts[item.icon];
                 var font_size = WTM.settings.plane_icon_size * WTM.icons[text];
-                _draw_text_icon(text, sx, sy, dir, color, font_size);
+                var offscreen = false;
+                var offscreen_offset = 12;
+
+                var slope = (_canvas.height / 2 - sy) / (_canvas.width / 2 - sx);
+                var y_intercept = sy - slope * sx;
+                //var offscreen_align = 'center';
+                //var offscreen_baseline;
+
+                if (sx > _canvas.width) {
+                    sx = _canvas.width - offscreen_offset;
+                    sy = slope * sx + y_intercept;
+                    offscreen = true;
+                    //offscreen_align = 'right';
+                } else if (sx < 0) {
+                    sx = offscreen_offset;
+                    sy = slope * sx + y_intercept;
+                    offscreen = true;
+                    //offscreen_align = 'left';
+                }
+                if (sy > _canvas.height) {
+                    sy = _canvas.height - offscreen_offset;
+                    sx = (sy - y_intercept) / slope;
+                    offscreen = true;
+                    //offscreen_baseline = 'top';
+                } else if (sy < 0) {
+                    sy = offscreen_offset;
+                    sx = (sy - y_intercept) / slope;
+                    offscreen = true;
+                    //offscreen_baseline = 'bottom';
+                }
+                var alpha;
+                if (offscreen) {
+                    alpha = '.35';
+                } else {
+                    alpha = '1';
+                }
+                _draw_text_icon(text, sx, sy, dir, color, alpha, font_size, null, '#000000');
+                //var distance = item._player_distance;
+                //distance = distance? (distance / 1000).toFixed(2) + ' km' : '';
+                //if (offscreen) {
+                //    _draw_text_icon(distance, sx, sy, 0, '#ffffff', '.75', 11,
+                //            'Tahoma', null, offscreen_align, offscreen_baseline);
+                //}
             } else {
                 _draw_map_object.apply(this, arguments);
             }
@@ -144,6 +205,10 @@ $.get(WTM.settings.base_url, function(data) {
                     if (item.type !== 'aircraft' || item.icon === 'Player') {
                         return;
                     }
+
+                    var distance = get_distance(item.x, item.y, _player.x, _player.y);
+                    item._player_distance = distance;
+
                     var color = item['color[]'];
                     if (color[0] < color[2]) {
                         friendlies += 1;
@@ -152,10 +217,7 @@ $.get(WTM.settings.base_url, function(data) {
                         enemies += 1;
                     }
 
-                    var x = item.x;
-                    var y = item.y;
 
-                    var distance = get_distance(x, y, _player.x, _player.y);
 
                     if (min_distance === null || distance < min_distance) {
                         min_distance = distance;
@@ -230,7 +292,7 @@ $.get(WTM.settings.base_url, function(data) {
                 get_xhr('/hudmsg?lastEvt=' + lastEvtMsgId + '&lastDmg=' + lastDmgMsgId, update_hud_msg);
             }
             if (_settings.update_chat) {
-                get_xhr('/gamechat?lastId='+lastChatRecId, update_game_chat);
+                get_xhr('/gamechat?lastId=' + lastChatRecId, update_game_chat);
             }
             if (_settings.update_indicators) {
                 get_xhr('/indicators', update_indicators);
@@ -240,7 +302,7 @@ $.get(WTM.settings.base_url, function(data) {
         var _addWheelHandler = addWheelHandler;
         addWheelHandler = function(elem, onWheel) {
             var _onWheel = onWheel;
-            
+
             onWheel = function() {
                 _onWheel.apply(this, arguments);
                 localStorage.persist_scale = map_scale / _map_width;

@@ -4,7 +4,6 @@ var WTM = {
         plane_icon_size: 25,
         base_url: 'http://localhost:8111/',
         map_center: 1,
-        map_scale: 80,
         object_update_rate: 50,
         update_chat: 0,
         update_hud: 0,
