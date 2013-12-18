@@ -206,18 +206,16 @@ $.get(WTM.settings.base_url, function(data) {
                         return;
                     }
 
-                    var distance = get_distance(item.x, item.y, _player.x, _player.y);
-                    item._player_distance = distance;
 
                     var color = item['color[]'];
                     if (color[0] < color[2]) {
                         friendlies += 1;
                         return;
-                    } else {
-                        enemies += 1;
                     }
+                    enemies += 1;
 
-
+                    var distance = get_distance(item.x, item.y, _player.x, _player.y);
+                    item._player_distance = distance;
 
                     if (min_distance === null || distance < min_distance) {
                         min_distance = distance;
