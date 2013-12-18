@@ -30,6 +30,7 @@ Features
    * The distance to the closest enemy
    * The total number of allied planes
  * Ground units never obscure plane icons
+ * Off-screen aircraft are displayed on the map edge when zoomed in
 
 Installation
 ------------
@@ -75,6 +76,10 @@ and Ju 88 for bombers.
 
 Changelog
 ---------
+
+**0.2.4** [2013-12-18]
+
+ * Display off-screen aircraft when zoomed in
 
 **0.2.3** [2013-12-17]
 
