@@ -1,7 +1,8 @@
 {
+    "default_locale": "en",
     "manifest_version": 2,
-    "name": "WT map",
-    "description": "Adds custom icons and centering on player to the War Thunder browser map.",
+    "name": "__MSG_extName___",
+    "description": "__MSG_extDescription___",
     "version": "0.2.5",
     "author": "slikts <dabas@untu.ms",
     "permissions": [

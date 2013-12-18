@@ -1,0 +1,10 @@
+{
+    "extName": {
+        "message": "WT mapx",
+        "description": "Extension name."
+    },
+    "extDescription": {
+        "message": "Adds custom icons and centering on player to the War Thunder browser map.",
+        "description": "Extension description."
+    }
+}
