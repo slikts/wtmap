@@ -7,7 +7,8 @@ var WTM = {
         object_update_rate: 50,
         update_chat: 0,
         update_hud: 0,
-        update_indicators: 0
+        update_indicators: 0,
+        update_state: 0
     },
     settings: {},
     update: function() {

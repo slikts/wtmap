@@ -90,7 +90,7 @@
     font-size: 12px;
 }
 
-
+#state-root,
 #mission-objectives,
 #game-chat-root,
 #hud-evt-msg-root,
@@ -99,6 +99,7 @@
     visibility: hidden;
     z-index: -1;
 }
+#state-root.show,
 #mission-objectives.show,
 #game-chat-root.show,
 #hud-evt-msg-root.show,

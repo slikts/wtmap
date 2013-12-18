@@ -284,6 +284,9 @@ $.get(WTM.settings.base_url, function(data) {
         if (_settings.update_indicators) {
             $('#indicators-root').addClass('show');
         }
+        if (_settings.update_state) {
+            $('#state-root').addClass('show');
+        }
         updateSlow = function() {
             //'/hudmsg', data:{'lastEvt':lastEvtMsgId, 'lastDmg':lastDmgMsgId} update_hud_msg
             if (_settings.update_hud) {
@@ -294,6 +297,9 @@ $.get(WTM.settings.base_url, function(data) {
             }
             if (_settings.update_indicators) {
                 get_xhr('/indicators', update_indicators);
+            }
+            if (_settings.update_state) {
+                get_xhr('/state', update_state);
             }
         };
 
