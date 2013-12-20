@@ -90,24 +90,13 @@
     font-size: 12px;
 }
 
-#state-root,
-#mission-objectives,
-#game-chat-root,
 #hud-evt-msg-root,
 #hud-dmg-msg-root,
-#indicators-root {
-    visibility: hidden;
-    z-index: -1;
+#game-chat-root,
+#mission-objectives {
+    display: none !important;
 }
-#state-root.show,
-#mission-objectives.show,
-#game-chat-root.show,
-#hud-evt-msg-root.show,
-#hud-dmg-msg-root.show,
-#indicators-root.show {
-    z-index: 0;
-    visibility: visible;
-}
+
 
 #wtm-options #show_advanced p {
     text-align: center;
@@ -148,12 +137,36 @@
 
 
 #map-root #draghandle {
+    text-align: right;
+}
+
+#state-root #draghandle,
+#hud-evt-msg-root #draghandle,
+#hud-dmg-msg-root #draghandle,
+#indicators-root #draghandle,
+#map-root #draghandle {
+    text-indent: .35em;
+}
+#wtm-mapsummary td,
+table.wtm-data,
+#state-root #draghandle,
+#hud-evt-msg-root #draghandle,
+#hud-dmg-msg-root #draghandle,
+#indicators-root #draghandle,
+#map-root #draghandle {
     font-size: 11px;
     color: #aaa;
     line-height: 20px;
-    text-align: right;
     white-space: nowrap;
     font-family: 'Consolas', 'Lucida Console', monospace;
+}
+#game-chat-root #draghandle,
+#hud-evt-msg-root #draghandle,
+#hud-dmg-msg-root #draghandle,
+#state-root #draghandle,
+#indicators-root #draghandle {
+    line-height: 21px;
+    color: #ddd;
 }
 #wtm-mapscale:before {
     content: 'Scale: ';
@@ -172,5 +185,89 @@
 #wtm-mapscale {
     margin: 0 .7em;
 }
-#wtm-mapgrid {
+
+#state-root #draghandle:before {
+    content: "State"
+}
+#indicators-root {
+    top: 5px !important;
+}
+table.wtm-data tr:first-child th,
+table.wtm-data tr:first-child td {
+    border-top-style: none;
+}
+table.wtm-data tr:last-child th,
+table.wtm-data tr:last-child td {
+    border-bottom-style: none;
+}
+table.wtm-data th,
+table.wtm-data td {
+    border-color: rgba(255, 255, 255, .035);
+    border-style: none;
+    border-width: 1px;
+    text-align: left;
+    padding: 0 .35em;
+    line-height: 1.5em;
+}
+table.wtm-data th {
+    border-bottom-style: solid;
+}
+table.wtm-data td {
+    border-left-style: solid;
+    border-bottom-style: solid;
+}
+#state-root ul,
+#indicators-root ul {
+    display: none;
+}
+table.wtm-data {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+#indicators-root #draghandle:before {
+    content: "Indicators"
+}
+
+#map-root {
+    border-style: none !important;
+}
+#indicators-root .caption,
+#map-root .caption,
+#state-root .caption {
+    border-radius: 1px 1px 0 0;
+    display: block;
+}
+#indicators-root,
+#map-root,
+#state-root {
+    display: block !important;
+    border-radius: 1px;
+}
+
+#wtm-mapsummary {
+    position: absolute;
+    max-width: 100%;
+    margin-top: 5px;
+    top: 100%;
+    border-collapse: collapse;
+    line-height: 1em;
+}
+.wtm-count {
+}
+#wtm-redrow th {
+    color: #e70000;
+}
+#wtm-bluerow th {
+    color: #145CFF;
+}
+#wtm-mapsummary th.wtm-aircraft {
+    font-family: 'plane_icons';
+}
+#wtm-mapsummary th {
+    font-family: 'Icons';
+    font-size: 25px;
+    padding: 0 2px;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: #000;
 }

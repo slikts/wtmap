@@ -5,10 +5,8 @@ var WTM = {
         base_url: 'http://localhost:8111/',
         map_center: 1,
         object_update_rate: 50,
-        update_chat: 0,
-        update_hud: 0,
-        update_indicators: 0,
-        update_state: 0
+        update_indicators: 1,
+        update_state: 1
     },
     settings: {},
     update: function() {
@@ -32,6 +30,11 @@ var WTM = {
         a: 0.92,
         b: 1.08,
         c: 0.96
+    },
+    icon_texts: {
+        'Fighter': 'a',
+        'Bomber': 'b',
+        'Assault': 'c'
     },
     conversion: {
         'meters': 1,

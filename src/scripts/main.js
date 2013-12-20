@@ -114,11 +114,7 @@ $.get(WTM.settings.base_url, function(data) {
         };
 
         var _draw_map_object = draw_map_object;
-        var icon_texts = {
-            'Fighter': 'a',
-            'Bomber': 'b',
-            'Assault': 'c'
-        };
+        var icon_texts = WTM.icon_texts;
 
         draw_map_object = function(canvas, ctx, item) {
 
@@ -187,34 +183,56 @@ $.get(WTM.settings.base_url, function(data) {
             'airfield': 1
         };
 
+        var $mapsummary = $('<table id="wtm-mapsummary">').appendTo('#map-root');
+        var mapsummary_rows = [$('<tr id="wtm-bluerow">').appendTo($mapsummary),
+            $('<tr id="wtm-redrow">').appendTo($mapsummary)];
+        var summary_order = ['Fighter', 'Bomber', 'Assault'];
+
         var _update_object_positions = update_object_positions;
         update_object_positions = function(objects) {
             _player = null;
+
 
             objects.sort(function(a, b) {
                 if (a.icon === 'Player') {
                     _player = a;
                 }
+
                 // Put aircrafts at the end so they are drawn last
                 return (_type_priority[a.type] || 0) > (_type_priority[b.type] || 0);
             });
+
+            var summary = {
+            };
+
             if (map_info) {
                 var min_distance = null;
                 var friendlies = 0;
                 var enemies = 0;
                 $.each(objects, function(i, item) {
+                    var color = item['color[]'];
+                    var team = color[0] > color[2] ? 'red' : 'blue';
+
+                    var icon = item.icon;
+                    if (icon !== 'none' && icon !== 'Player') {
+                        var _summary = summary[icon];
+                        if (!_summary) {
+                            _summary = summary[icon] = [0, 0];
+                        }
+                        _summary[team === 'blue' ? 0 : 1] += 1;
+                    }
+
                     if (item.type !== 'aircraft' || item.icon === 'Player') {
                         return;
                     }
 
-                    var color = item['color[]'];
-                    if (color[0] < color[2]) {
+                    if (team === 'blue') {
                         friendlies += 1;
-                        return;
+                    } else {
+                        enemies += 1;
                     }
-                    enemies += 1;
 
-                    if (_player) {
+                    if (team === 'red' && _player) {
                         var distance = get_distance(item.x, item.y, _player.x, _player.y);
                         //item._player_distance = distance;
 
@@ -222,6 +240,51 @@ $.get(WTM.settings.base_url, function(data) {
                             min_distance = distance;
                         }
                     }
+                });
+                var rows = mapsummary_rows;
+                rows[0].html('');
+                rows[1].html('');
+                var wtm_icons = WTM.icons;
+                var order = summary_order
+                        .slice(0)
+                        .concat(Object.keys(summary)
+                                .filter(function(x) {
+                                    return !~summary_order.indexOf(x);
+                                }));
+
+                $.each(order, function(i, icon) {
+                    var team_objects = summary[icon];
+                    if (!team_objects) {
+                        return;
+                    }
+                    var icon_text;
+                    var aircraft;
+                    if (icon in icon_texts) {
+                        icon_text = icon_texts[icon];
+                        aircraft = true;
+                    } else if (icon === 'Airdefence') {
+                        icon_text = '4';
+                    } else if (icon === 'Structure') {
+                        icon_text = '5';
+                    } else {
+                        icon_text = icon[0];
+                    }
+                    $.each(team_objects, function(i, count) {
+                        var $row = rows[i];
+                        var $icon = $('<th>').text(count ? icon_text : '')
+                                .attr('title', icon)
+                                .appendTo($row);
+                        if (aircraft) {
+                            $icon.addClass('wtm-aircraft')
+                                    .css('fontSize', 22 * wtm_icons[icon_text] + 'px');
+                        }
+                        $('<td>').text(count ? count : '')
+                                .attr('title', icon)
+                                .appendTo($row);
+                        if (!count) {
+
+                        }
+                    });
                 });
 
                 var title_info = [];
@@ -274,6 +337,9 @@ $.get(WTM.settings.base_url, function(data) {
             map_scale = _map_width * parseFloat(persist_scale, 10);
         };
 
+        updateFast = function() {
+        }
+
         function xhr_onload(handler) {
             handler(this.responseText ? JSON.parse(this.responseText) : []);
         }
@@ -305,13 +371,6 @@ $.get(WTM.settings.base_url, function(data) {
             $('#state-root').addClass('show');
         }
         updateSlow = function() {
-            //'/hudmsg', data:{'lastEvt':lastEvtMsgId, 'lastDmg':lastDmgMsgId} update_hud_msg
-            if (_settings.update_hud) {
-                get_xhr('/hudmsg?lastEvt=' + lastEvtMsgId + '&lastDmg=' + lastDmgMsgId, update_hud_msg);
-            }
-            if (_settings.update_chat) {
-                get_xhr('/gamechat?lastId=' + lastChatRecId, update_game_chat);
-            }
             if (_settings.update_indicators) {
                 get_xhr('/indicators', update_indicators);
             }
@@ -338,8 +397,54 @@ $.get(WTM.settings.base_url, function(data) {
             return _addWheelHandler.apply(this, arguments);
         };
 
-        init();
+//        save_positions = function() {
+//        };
 
+
+        function update_table(data, data_store, $table) {
+            if (!data || !data.valid) {
+                return;
+            }
+            $.each(data_store, function(key, $val) {
+                if (!(key in data)) {
+                    $val.parent().remove();
+                    delete data_store[key];
+                }
+            });
+            $.each(data, function(key, val) {
+                if (key === 'valid') {
+                    return;
+                }
+                var $val = data_store[key];
+                var _key = key.split(',');
+                var _unit = _key[1] || '';
+                if (_unit === ' %') {
+                    _unit = _unit.trim();
+                }
+                val = val + _unit;
+                if (!$val) {
+                    var $row = $('<tr>').append($('<th>').text(_key[0].replace('_', ' ')));
+                    data_store[key] = $('<td>').appendTo($row).text(val);
+                    $table.append($row);
+                } else {
+                    $val.text(val);
+                }
+            });
+        }
+
+        var $indicators_table = $('<table class="wtm-data">').appendTo('#indicators');
+        var indicators_data = {};
+        function update_indicators(data) {
+            update_table(data, indicators_data, $indicators_table);
+        }
+
+        var $state_table = $('<table class="wtm-data">').appendTo('#state');
+        var state_data = {};
+        function update_state(data) {
+            update_table(data, state_data, $state_table);
+        }
+
+        init();
 
         var $canvas = $('#map-canvas');
         _canvas = $canvas[0];

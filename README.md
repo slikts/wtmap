@@ -83,6 +83,7 @@ Changelog
  * Fix title info not updating properly if player is not spawned
  * Fix map scale resetting after map info updated
  * Display map size and scale and grid size in map panel caption
+ * Decrease CPU usage
 
 **0.2.5** [2013-12-18]
 
