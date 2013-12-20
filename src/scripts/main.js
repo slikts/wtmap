@@ -391,6 +391,10 @@ $.get(WTM.settings.base_url, function(data) {
 
         function update_table(data, data_store, $table, data_key) {
             if (!data || !data.valid) {
+                $.each(data_store, function(key) {
+                    delete data_store[key];
+                });
+                $table.find('tr').remove();
                 return;
             }
             $.each(data_store, function(key, $val) {
