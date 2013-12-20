@@ -22,13 +22,15 @@ Features
 
  * Different plane icons for fighters, bombers and attackers
  * Plane icons show plane orientation
- * Closer to real-time updating
+ * Close to real-time update rate
  * Automatic map centering and zooming on player
  * Configurable plane icon size
- * Info in page title:
-   * The number of spotted enemies
-   * The distance to the closest enemy
-   * The total number of allied planes
+ * Info about spotted enemies, distance to closest enemy and number of allies
+   in title bar
+ * Automatic optimal map sizing
+ * Disables less useful panels like chat, HUD messages
+ * Option to reduce CPU load
+ * Option to enable or disable state and indicator panel updating
  * Ground units never obscure plane icons
  * Off-screen aircraft are displayed at the map edge when zoomed in:
    ![Panning](https://raw.github.com/slikts/wtmap/master/pan.gif)
@@ -65,7 +67,7 @@ It doesn't modify the map in-place but recreates it in a special page
 because the Chrome content scripts can only access page DOM and not their
 JavaScript environment.
 
-The features added by this extension don't depend on Chrome-specific
+The features added by this extension mostly don't depend on Chrome-specific
 functionality and should be easily portable to other platforms.
 
 The idea of making this extension comes from the
@@ -84,6 +86,10 @@ Changelog
  * Fix map scale resetting after map info updated
  * Display map size and scale and grid size in map panel caption
  * Decrease CPU usage
+ * Make it possible to disable or enable panels in-line
+ * Add separate map object totals for allied an enemy objects
+ * Make panel layout automatic, map always tries to take the maximum space
+ * Usability tweaks
 
 **0.2.5** [2013-12-18]
 
