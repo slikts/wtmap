@@ -276,7 +276,7 @@ $.get(WTM.settings.base_url, function(data) {
                                 .appendTo($row);
                         if (aircraft) {
                             $icon.addClass('wtm-aircraft')
-                                    .css('fontSize', 22 * wtm_icons[icon_text] + 'px');
+                                    .css('fontSize', 23 * wtm_icons[icon_text] + 'px');
                         }
                         $('<td>').text(count ? count : '')
                                 .attr('title', icon)
@@ -335,10 +335,12 @@ $.get(WTM.settings.base_url, function(data) {
                     );
 
             map_scale = _map_width * parseFloat(persist_scale, 10);
+
+            update_scale();
         };
 
         updateFast = function() {
-        }
+        };
 
         function xhr_onload(handler) {
             handler(this.responseText ? JSON.parse(this.responseText) : []);
@@ -357,19 +359,6 @@ $.get(WTM.settings.base_url, function(data) {
         WTM.get_map_info = get_xhr.bind(WTM, '/map_info.json', update_map_info);
         window.setInterval(WTM.get_map_info, 5000);
         WTM.get_map_info();
-        if (_settings.update_hud) {
-            $('#hud-evt-msg-root').addClass('show');
-            $('#hud-dmg-msg-root').addClass('show');
-        }
-        if (_settings.update_chat) {
-            $('#game-chat-root').addClass('show');
-        }
-        if (_settings.update_indicators) {
-            $('#indicators-root').addClass('show');
-        }
-        if (_settings.update_state) {
-            $('#state-root').addClass('show');
-        }
         updateSlow = function() {
             if (_settings.update_indicators) {
                 get_xhr('/indicators', update_indicators);
@@ -397,9 +386,8 @@ $.get(WTM.settings.base_url, function(data) {
             return _addWheelHandler.apply(this, arguments);
         };
 
-//        save_positions = function() {
-//        };
-
+        save_positions = function() {
+        };
 
         function update_table(data, data_store, $table) {
             if (!data || !data.valid) {
@@ -444,11 +432,16 @@ $.get(WTM.settings.base_url, function(data) {
             update_table(data, state_data, $state_table);
         }
 
-        init();
-
         var $canvas = $('#map-canvas');
         _canvas = $canvas[0];
+
+        load_positions = function() {
+        };
+
+        init();
+
         _ctx = _canvas.getContext('2d');
+
 
         var _option_stop = $canvas.resizable('option', 'stop');
         $canvas.resizable('option', 'stop', function(event, ui) {
@@ -457,8 +450,61 @@ $.get(WTM.settings.base_url, function(data) {
             _option_stop.apply(this, arguments);
         });
 
-        window.setTimeout(update_scale, 10);
         update_scale();
+
+        var $indicators_root = $('#indicators-root');
+        var $state_root = $('#state-root');
+
+        $canvas.add($indicators_root).add($state_root).resizable('destroy');
+        $indicators_root.add($state_root).draggable('destroy');
+
+        var panel_padding = 5;
+        $('#map-root').css('left', panel_padding);
+        function position_panels() {
+            var viewport_height = document.documentElement.clientHeight;
+            var canvas_size = Math.max(viewport_height - 80, 300);
+            if ($canvas.width() !== canvas_size) {
+                $canvas.width(canvas_size);
+                $canvas.height(canvas_size);
+                var _cnv = $canvas.get(0);
+                _cnv.width = canvas_size;
+                _cnv.height = canvas_size;
+            }
+            $state_root.css('left', canvas_size + panel_padding * 2);
+            $indicators_root.css('left', canvas_size + $state_root.width() + panel_padding * 3);
+            update_scale();
+        }
+
+        function add_checkbox($panel, setting) {
+            $panel.find('#draghandle').append($('<div class="wtm-toggle">')
+                    .append(
+                            $('<label>')
+                            .attr('for', setting + '-toggle')
+                            .text('Update')
+                            )
+                    .append(
+                            $('<input type="checkbox">')
+                            .attr('id', setting + '-toggle')
+                            .attr('checked', !!_settings[setting])
+                            .change(function() {
+                                var checked = this.checked;
+                                localStorage[setting] = _settings[setting] = checked * 1;
+                                $panel[(checked ? 'remove' : 'add') + 'Class']('off');
+                                position_panels();
+                            })
+                            )
+                    );
+            if (!_settings[setting]) {
+                $panel.addClass('off');
+            }
+        }
+        
+        add_checkbox($indicators_root, 'update_indicators')
+        add_checkbox($state_root, 'update_state')
+
+        position_panels();
+
+        $(window).resize(position_panels);
     }
 }).fail(function() {
     window.location.href = 'error.html';

@@ -5,8 +5,8 @@ var WTM = {
         base_url: 'http://localhost:8111/',
         map_center: 1,
         object_update_rate: 50,
-        update_indicators: 1,
-        update_state: 1
+        update_indicators: 0,
+        update_state: 0
     },
     settings: {},
     update: function() {

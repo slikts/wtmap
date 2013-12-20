@@ -147,6 +147,8 @@
 #map-root #draghandle {
     text-indent: .35em;
 }
+.wtm-toggle,
+#map-root:after,
 #wtm-mapsummary td,
 table.wtm-data,
 #state-root #draghandle,
@@ -156,7 +158,7 @@ table.wtm-data,
 #map-root #draghandle {
     font-size: 11px;
     color: #aaa;
-    line-height: 20px;
+    line-height: 21px;
     white-space: nowrap;
     font-family: 'Consolas', 'Lucida Console', monospace;
 }
@@ -187,8 +189,10 @@ table.wtm-data,
 }
 
 #state-root #draghandle:before {
+    font-weight: bold;
     content: "State"
 }
+#state-root,
 #indicators-root {
     top: 5px !important;
 }
@@ -221,11 +225,12 @@ table.wtm-data td {
     display: none;
 }
 table.wtm-data {
-    width: 100%;
+    width: 300px;
     border-collapse: collapse;
     table-layout: fixed;
 }
 #indicators-root #draghandle:before {
+    font-weight: bold;
     content: "Indicators"
 }
 
@@ -264,10 +269,51 @@ table.wtm-data {
 #wtm-mapsummary th.wtm-aircraft {
     font-family: 'plane_icons';
 }
+#wtm-mapsummary td {
+    font-size: 11px;
+}
 #wtm-mapsummary th {
     font-family: 'Icons';
-    font-size: 25px;
+    font-size: 26px;
     padding: 0 2px;
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: #000;
+}
+#draghandle {
+    cursor: default !important;
+}
+#map-canvas {
+    box-sizing: border-box;
+    border: 1px solid #555;
+    border-top-style: none;
+}
+#map-root:after {
+    height: 16px;
+    position: absolute;
+    content: 'Use mouse wheel to change zoom level';
+    top: 100%;
+    right: 0;
+}
+
+.wtm-toggle {
+    white-space: nowrap;
+    float: right;
+    padding-left: 1em;
+}
+.wtm-toggle label {
+    position: relative;
+    top: -2px;
+}
+#state-root.off #state,
+#indicators-root.off #indicators {
+    display: none;
+}
+#indicators-root.off,
+#state-root.off {
+    width: auto;
+}
+
+#indicators,
+#state {
+    overflow: visible !important;
 }
