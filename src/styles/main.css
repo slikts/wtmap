@@ -204,6 +204,47 @@ table.wtm-data tr:last-child th,
 table.wtm-data tr:last-child td {
     border-bottom-style: none;
 }
+.wtm-data tr.hl {
+    background: rgba(255, 255, 255, .05);
+}
+.wtm-data tr.hl td,
+.wtm-data tr.hl th {
+    border-bottom-color: rgba(255, 255, 255, .05);
+}
+.wtm-data tr.hl th,
+.wtm-data tr.hl td {
+    color: #ddd;
+}
+.wtm-data tr.hl td {
+    font-size: 2em;
+}
+.wtm-data tr:hover th,
+.wtm-data tr:hover td {
+    border-bottom-color: rgba(255, 255, 255, .05);
+}
+.wtm-data tr:hover {
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, .05);
+}
+.wtm-data {
+    position: relative;
+}
+#map-canvas {
+    cursor: -webkit-grab;
+}
+#map-canvas:active {
+    cursor: -webkit-grabbing;
+}
+.wtm-data:hover:after {
+    display: block;
+}
+.wtm-data:after {
+    display: none;
+    content: 'Click rows to highlight';
+    position: absolute;
+    top: 100%;
+    left: 0;
+}
 table.wtm-data th,
 table.wtm-data td {
     border-color: rgba(255, 255, 255, .035);
@@ -253,7 +294,7 @@ table.wtm-data {
 #wtm-mapsummary {
     position: absolute;
     max-width: 100%;
-    margin-top: 5px;
+    margin-top: 4px;
     top: 100%;
     border-collapse: collapse;
     line-height: 1em;
@@ -293,6 +334,10 @@ table.wtm-data {
     content: 'Use mouse wheel to change zoom level';
     top: 100%;
     right: 0;
+    display: none;
+}
+#map-root:hover:after {
+    display: block;
 }
 
 .wtm-toggle {

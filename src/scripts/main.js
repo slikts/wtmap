@@ -389,7 +389,7 @@ $.get(WTM.settings.base_url, function(data) {
         save_positions = function() {
         };
 
-        function update_table(data, data_store, $table) {
+        function update_table(data, data_store, $table, data_key) {
             if (!data || !data.valid) {
                 return;
             }
@@ -411,7 +411,16 @@ $.get(WTM.settings.base_url, function(data) {
                 }
                 val = val + _unit;
                 if (!$val) {
-                    var $row = $('<tr>').append($('<th>').text(_key[0].replace('_', ' ')));
+                    var ls_key = _key[0] + '_hl_' + data_key;
+                    var $row = $('<tr>');
+                    $row.click(function() {
+                        localStorage[ls_key] = 1 - (localStorage[ls_key] || 0);
+                        $row.toggleClass('hl');
+                    })
+                            .append($('<th>').text(_key[0].replace('_', ' ')));
+                    if (localStorage[ls_key] * 1) {
+                        $row.addClass('hl');
+                    }
                     data_store[key] = $('<td>').appendTo($row).text(val);
                     $table.append($row);
                 } else {
@@ -423,13 +432,13 @@ $.get(WTM.settings.base_url, function(data) {
         var $indicators_table = $('<table class="wtm-data">').appendTo('#indicators');
         var indicators_data = {};
         function update_indicators(data) {
-            update_table(data, indicators_data, $indicators_table);
+            update_table(data, indicators_data, $indicators_table, 'indicators');
         }
 
         var $state_table = $('<table class="wtm-data">').appendTo('#state');
         var state_data = {};
         function update_state(data) {
-            update_table(data, state_data, $state_table);
+            update_table(data, state_data, $state_table, 'state');
         }
 
         var $canvas = $('#map-canvas');
@@ -498,9 +507,9 @@ $.get(WTM.settings.base_url, function(data) {
                 $panel.addClass('off');
             }
         }
-        
-        add_checkbox($indicators_root, 'update_indicators')
-        add_checkbox($state_root, 'update_state')
+
+        add_checkbox($indicators_root, 'update_indicators');
+        add_checkbox($state_root, 'update_state');
 
         position_panels();
 
