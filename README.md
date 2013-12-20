@@ -25,13 +25,14 @@ Features
  * Close to real-time update rate
  * Automatic map centering and zooming on player
  * Configurable plane icon size
+ * Option to reduce CPU load
+ * Summary of total map objects by kind for both teams
+ * Automatic optimal map sizing
+ * Options to enable or disable state and indicator panel updating
+ * Disables less useful panels like chat, HUD messages
+ * Ground units never obscure plane icons
  * Info about spotted enemies, distance to closest enemy and number of allies
    in title bar
- * Automatic optimal map sizing
- * Disables less useful panels like chat, HUD messages
- * Option to reduce CPU load
- * Option to enable or disable state and indicator panel updating
- * Ground units never obscure plane icons
  * Off-screen aircraft are displayed at the map edge when zoomed in:
    ![Panning](https://raw.github.com/slikts/wtmap/master/pan.gif)
 
