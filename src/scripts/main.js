@@ -239,7 +239,6 @@ $.get(WTM.settings.base_url, function(data) {
         };
 
         var _update_map_info = update_map_info;
-        var _initial_scale = false;
         update_map_info = function(info) {
             _update_map_info.apply(this, arguments);
 
@@ -249,10 +248,7 @@ $.get(WTM.settings.base_url, function(data) {
             _map_width = map_max[0] - map_min[0];
             _map_height = map_max[1] - map_min[0];
 
-            if (!_initial_scale) {
-                map_scale = _map_width * parseFloat(localStorage.persist_scale, 10);
-                _initial_scale = true;
-            }
+            map_scale = _map_width * parseFloat(localStorage.persist_scale, 10);
         };
 
         function xhr_onload(handler) {
