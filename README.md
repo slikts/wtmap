@@ -78,6 +78,11 @@ and Ju 88 for bombers.
 Changelog
 ---------
 
+**0.2.6** [2013-12-18]
+
+ * Fix title info not updating properly if player is not spawned
+ * Fix map scale resetting after map info updated
+
 **0.2.5** [2013-12-18]
 
  * Add support for the new "state" panel in 1.37
