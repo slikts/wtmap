@@ -246,6 +246,10 @@ $.get(WTM.settings.base_url, function(data) {
             _update_object_positions.apply(this, arguments);
         };
 
+        var $map_info = $('<span id="wtm-mapinfo">').appendTo('#map-root [id=draghandle]');
+        var $map_dimension_info = $('<span id="wtm-mapdimensions">').appendTo($map_info);
+        var $map_grid_info = $('<span id="wtm-mapgrid">').appendTo($map_info);
+        var _map_units = WTM.settings.units === 'meters' ? 'km' : 'mi';
         var _update_map_info = update_map_info;
         update_map_info = function(info) {
             _update_map_info.apply(this, arguments);
@@ -255,6 +259,17 @@ $.get(WTM.settings.base_url, function(data) {
 
             _map_width = map_max[0] - map_min[0];
             _map_height = map_max[1] - map_min[0];
+
+            $map_dimension_info.html(
+                    Math.round(WTM.m2x(_map_width, _map_units))
+                    + '&times'
+                    + Math.round(WTM.m2x(_map_height, _map_units))
+                    + ' ' + _map_units
+                    );
+            $map_grid_info.text(
+                    WTM.m2x(map_info.grid_steps[0], _map_units).toFixed(2)
+                    + ' ' + _map_units
+                    );
 
             map_scale = _map_width * parseFloat(persist_scale, 10);
         };
@@ -305,6 +320,11 @@ $.get(WTM.settings.base_url, function(data) {
             }
         };
 
+        var $map_scaleinfo = $('<span id="wtm-mapscale">').appendTo($map_info);
+        function update_scale() {
+            $map_scaleinfo.text(map_scale.toFixed(2));
+        }
+
         var _addWheelHandler = addWheelHandler;
         addWheelHandler = function(elem, onWheel) {
             var _onWheel = onWheel;
@@ -312,32 +332,14 @@ $.get(WTM.settings.base_url, function(data) {
             onWheel = function() {
                 _onWheel.apply(this, arguments);
                 persist_scale = localStorage.persist_scale = map_scale / _map_width;
+                update_scale();
             };
 
             return _addWheelHandler.apply(this, arguments);
         };
 
-        var last_map_scale;
-        var last_map_scale_t = 0;
-        var _redraw_map = redraw_map;
-        redraw_map = function() {
-            _redraw_map.apply(this, arguments);
-
-            if (map_scale !== last_map_scale) {
-                last_map_scale_t = 0;
-                last_map_scale = map_scale;
-            }
-            if (last_map_scale_t < 100) {
-                _ctx.textAlign = 'right';
-                _ctx.textBaseline = 'bottom';
-                _ctx.fillStyle = '#fff';
-                _ctx.font = '12px Tahoma';
-                _ctx.fillText('Scale: ' + (Math.round(map_scale * 100) / 100) + 'x', _canvas.width - 15, _canvas.height - 5);
-                last_map_scale_t += 1;
-            }
-        };
-
         init();
+
 
         var $canvas = $('#map-canvas');
         _canvas = $canvas[0];
@@ -346,8 +348,12 @@ $.get(WTM.settings.base_url, function(data) {
         var _option_stop = $canvas.resizable('option', 'stop');
         $canvas.resizable('option', 'stop', function(event, ui) {
             map_scale = map_scale / (ui.size.width / _canvas.width);
+            update_scale();
             _option_stop.apply(this, arguments);
         });
+
+        window.setTimeout(update_scale, 10);
+        update_scale();
     }
 }).fail(function() {
     window.location.href = 'error.html';

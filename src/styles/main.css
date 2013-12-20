@@ -145,3 +145,32 @@
 #wtm-options a:active {
     color: #f06;
 }
+
+
+#map-root #draghandle {
+    font-size: 11px;
+    color: #aaa;
+    line-height: 20px;
+    text-align: right;
+    white-space: nowrap;
+    font-family: 'Consolas', 'Lucida Console', monospace;
+}
+#wtm-mapscale:before {
+    content: 'Scale: ';
+}
+#wtm-mapscale:after {
+    content: '\00d7';
+}
+#wtm-mapdimensions:before {
+    content: 'Map: ';
+}
+#wtm-mapgrid:before {
+    content: 'Grid: ';
+}
+#wtm-mapdimensions,
+#wtm-mapgrid,
+#wtm-mapscale {
+    margin: 0 .7em;
+}
+#wtm-mapgrid {
+}
