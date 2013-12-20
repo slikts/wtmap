@@ -1,8 +1,9 @@
 $.get(WTM.settings.base_url, function(data) {
     var _title = document.title;
 
-    if (!localStorage.persist_scale || localStorage.persist_scale === 'NaN') {
-        localStorage.persist_scale = "0.00005";
+    var persist_scale = localStorage.persist_scale;
+    if (!persist_scale || persist_scale === 'NaN') {
+        persist_scale = localStorage.persist_scale = "0.00005";
     }
 
     var $wtm_scripts = $('script');
@@ -255,7 +256,7 @@ $.get(WTM.settings.base_url, function(data) {
             _map_width = map_max[0] - map_min[0];
             _map_height = map_max[1] - map_min[0];
 
-            map_scale = _map_width * parseFloat(localStorage.persist_scale, 10);
+            map_scale = _map_width * parseFloat(persist_scale, 10);
         };
 
         function xhr_onload(handler) {
@@ -310,10 +311,30 @@ $.get(WTM.settings.base_url, function(data) {
 
             onWheel = function() {
                 _onWheel.apply(this, arguments);
-                localStorage.persist_scale = map_scale / _map_width;
+                persist_scale = localStorage.persist_scale = map_scale / _map_width;
             };
 
             return _addWheelHandler.apply(this, arguments);
+        };
+
+        var last_map_scale;
+        var last_map_scale_t = 0;
+        var _redraw_map = redraw_map;
+        redraw_map = function() {
+            _redraw_map.apply(this, arguments);
+
+            if (map_scale !== last_map_scale) {
+                last_map_scale_t = 0;
+                last_map_scale = map_scale;
+            }
+            if (last_map_scale_t < 100) {
+                _ctx.textAlign = 'right';
+                _ctx.textBaseline = 'bottom';
+                _ctx.fillStyle = '#fff';
+                _ctx.font = '12px Tahoma';
+                _ctx.fillText('Scale: ' + (Math.round(map_scale * 100) / 100) + 'x', _canvas.width - 15, _canvas.height - 5);
+                last_map_scale_t += 1;
+            }
         };
 
         init();
