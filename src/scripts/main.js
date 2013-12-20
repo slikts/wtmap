@@ -197,7 +197,7 @@ $.get(WTM.settings.base_url, function(data) {
                 // Put aircrafts at the end so they are drawn last
                 return (_type_priority[a.type] || 0) > (_type_priority[b.type] || 0);
             });
-            if (map_info && _player) {
+            if (map_info) {
                 var min_distance = null;
                 var friendlies = 0;
                 var enemies = 0;
@@ -206,7 +206,6 @@ $.get(WTM.settings.base_url, function(data) {
                         return;
                     }
 
-
                     var color = item['color[]'];
                     if (color[0] < color[2]) {
                         friendlies += 1;
@@ -214,11 +213,13 @@ $.get(WTM.settings.base_url, function(data) {
                     }
                     enemies += 1;
 
-                    var distance = get_distance(item.x, item.y, _player.x, _player.y);
-                    item._player_distance = distance;
+                    if (_player) {
+                        var distance = get_distance(item.x, item.y, _player.x, _player.y);
+                        //item._player_distance = distance;
 
-                    if (min_distance === null || distance < min_distance) {
-                        min_distance = distance;
+                        if (min_distance === null || distance < min_distance) {
+                            min_distance = distance;
+                        }
                     }
                 });
 
@@ -231,9 +232,15 @@ $.get(WTM.settings.base_url, function(data) {
                     var _min_distance = (WTM.m2x(min_distance, _units)).toFixed(2);
                     title_info.push(' > ' + _min_distance + ' ' + _units);
                 }
-                title_info.push('F:' + friendlies);
+                if (friendlies) {
+                    title_info.push('F:' + friendlies);
+                }
 
-                document.title = '(' + title_info.join(' ') + ') ' + _title;
+                if (title_info.length) {
+                    document.title = '(' + title_info.join(' ') + ') ' + _title;
+                } else {
+                    document.title = _title;
+                }
             }
             _update_object_positions.apply(this, arguments);
         };
@@ -252,9 +259,7 @@ $.get(WTM.settings.base_url, function(data) {
         };
 
         function xhr_onload(handler) {
-            if (this.responseText) {
-                handler(JSON.parse(this.responseText));
-            }
+            handler(this.responseText ? JSON.parse(this.responseText) : []);
         }
 
         function get_xhr(url, handler) {
