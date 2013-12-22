@@ -90,6 +90,9 @@
     font-size: 12px;
 }
 
+#map-root,
+#indicators-root,
+#state-root,
 #hud-evt-msg-root,
 #hud-dmg-msg-root,
 #game-chat-root,
@@ -135,40 +138,22 @@
     color: #f06;
 }
 
-
-#map-root #draghandle {
-    text-align: right;
-}
-
-#state-root #draghandle,
-#hud-evt-msg-root #draghandle,
-#hud-dmg-msg-root #draghandle,
-#indicators-root #draghandle,
-#map-root #draghandle {
+.wtm-panel .wtm-caption {
     text-indent: .35em;
+    line-height: 21px;
+    height: 21px;
+    width: 100%;
+    color: #ddd;
+    border-radius: 1px 1px 0 0;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #606060), color-stop(100%, #555));
 }
-.wtm-toggle,
-#map-root:after,
-#wtm-mapsummary td,
-table.wtm-data,
-#state-root #draghandle,
-#hud-evt-msg-root #draghandle,
-#hud-dmg-msg-root #draghandle,
-#indicators-root #draghandle,
-#map-root #draghandle {
+
+* {
     font-size: 11px;
     color: #aaa;
     line-height: 21px;
     white-space: nowrap;
     font-family: 'Consolas', 'Lucida Console', monospace;
-}
-#game-chat-root #draghandle,
-#hud-evt-msg-root #draghandle,
-#hud-dmg-msg-root #draghandle,
-#state-root #draghandle,
-#indicators-root #draghandle {
-    line-height: 21px;
-    color: #ddd;
 }
 #wtm-mapscale:before {
     content: 'Scale: ';
@@ -188,14 +173,30 @@ table.wtm-data,
     margin: 0 .7em;
 }
 
-#state-root #draghandle:before {
+#wtm-state-root .wtm-caption:before {
     font-weight: bold;
-    content: "State"
+    content: "State";
 }
-#state-root,
-#indicators-root {
-    top: 5px !important;
+
+
+#wtm-sidepanels {
+    position: absolute;
+    top: 5px;
+    right: 5px;
 }
+#wtm-sidepanels .wtm-panel {
+    margin-right: 5px;
+    margin-bottom: 5px;
+
+}
+.wtm-panel {
+    float: left;
+    border-radius: 1px;
+    background-color: rgba(255, 255, 255, .1);
+    background-color: rgba(128, 128, 128, .25);
+    background-color: rgba(40, 40, 40, .7);
+}
+
 table.wtm-data tr:first-child th,
 table.wtm-data tr:first-child td {
     border-top-style: none;
@@ -244,6 +245,7 @@ table.wtm-data tr:last-child td {
     position: absolute;
     top: 100%;
     left: 0;
+    color: #aaa;
 }
 table.wtm-data th,
 table.wtm-data td {
@@ -261,35 +263,18 @@ table.wtm-data td {
     border-left-style: solid;
     border-bottom-style: solid;
 }
-#state-root ul,
-#indicators-root ul {
-    display: none;
-}
 table.wtm-data {
     width: 300px;
     border-collapse: collapse;
     table-layout: fixed;
 }
-#indicators-root #draghandle:before {
+.wtm-panel .wtm-caption:before {
     font-weight: bold;
+}
+#wtm-indicators-root .wtm-caption:before {
     content: "Indicators"
 }
 
-#map-root {
-    border-style: none !important;
-}
-#indicators-root .caption,
-#map-root .caption,
-#state-root .caption {
-    border-radius: 1px 1px 0 0;
-    display: block;
-}
-#indicators-root,
-#map-root,
-#state-root {
-    display: block !important;
-    border-radius: 1px;
-}
 
 #wtm-mapsummary {
     position: absolute;
@@ -323,20 +308,23 @@ table.wtm-data {
 #draghandle {
     cursor: default !important;
 }
-#map-canvas {
-    box-sizing: border-box;
+#wtm-map {
     border: 1px solid #555;
     border-top-style: none;
+    border-radius: 0 0 1px 1px;
 }
-#map-root:after {
-    height: 16px;
+#map-canvas {
+    display: block;
+}
+#wtm-map-root:after {
     position: absolute;
-    content: 'Use mouse wheel to change zoom level';
+    content: 'Use the mouse wheel to change the zoom level';
     top: 100%;
     right: 0;
     display: none;
+    color: #aaa;
 }
-#map-root:hover:after {
+#wtm-map-root:hover:after {
     display: block;
 }
 
@@ -345,20 +333,36 @@ table.wtm-data {
     float: right;
     padding-left: 1em;
 }
-.wtm-toggle label {
+.wtm-toggle input {
+    margin: 0 5px 0 3px;
     position: relative;
-    top: -2px;
+    top: 2px;
 }
-#state-root.off #state,
-#indicators-root.off #indicators {
+.wtm-toggle label {
+}
+.wtm-panel.off .wtm-caption {
+    border-radius: 1px;
+}
+.wtm-panel.off .wtm-panel-contents {
     display: none;
 }
-#indicators-root.off,
-#state-root.off {
-    width: auto;
+
+body {
+    margin: 5px;
+    background-image: url('../images/bg.png');
+    background-repeat: no-repeat;
+    background-size: 100% auto;
+    background-position: 100% 0;
 }
 
-#indicators,
-#state {
-    overflow: visible !important;
+#wtm-map-root {
+    position: relative;
+}
+
+#wtm-mapinfo {
+    float: right;
+}
+#wtm-mapinfo,
+.wtm-toggle {
+    color: #aaa;
 }

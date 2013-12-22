@@ -10,7 +10,10 @@ $.get(WTM.settings.base_url, function(data) {
 
     $(document.body).html(data
             .replace('<head>', '<head><base href="' + WTM.settings.base_url + '">')
-            .replace(/\ssrc="/g, ' data-src="'));
+            .replace(/\ssrc="/g, ' data-src="')
+            .replace(/'#555'/g, "'rgba(255, 255, 255, .13)'")
+            .replace(/'#111'/g, "'rgba(0, 0, 0, .75)'")
+            );
 
     var loaded_scripts = 0;
     var scripts = [];
@@ -183,10 +186,31 @@ $.get(WTM.settings.base_url, function(data) {
             'airfield': 1
         };
 
-        var $mapsummary = $('<table id="wtm-mapsummary">').appendTo('#map-root');
+        function add_panel(id) {
+            var $caption = $('<div class="wtm-caption">');
+            var $contents = $('<div id="wtm-' + id + '" class="wtm-panel-contents">');
+            return $('<div id="wtm-' + id + '-root" class="wtm-panel">')
+                    .append($caption)
+                    .data('$caption', $caption)
+                    .append($contents)
+                    .data('$contents', $contents);
+        }
+
+        var $map_root = add_panel('map').appendTo(document.body);
+        var $sidepanels = $('<div id="wtm-sidepanels">').appendTo(document.body);
+        var $state_root = add_panel('state').appendTo($sidepanels);
+        var $indicators_root = add_panel('indicators').appendTo($sidepanels);
+
+        var $canvas = $('#map-canvas').appendTo($map_root.data('$contents'));
+        _canvas = $canvas[0];
+        _ctx = _canvas.getContext('2d');
+
+
+        var $mapsummary = $('<table id="wtm-mapsummary">').appendTo($map_root);
         var mapsummary_rows = [$('<tr id="wtm-bluerow">').appendTo($mapsummary),
             $('<tr id="wtm-redrow">').appendTo($mapsummary)];
-        var summary_order = ['Fighter', 'Bomber', 'Assault'];
+        var summary_order = ['Fighter', 'Bomber', 'Assault',
+            'Tracked', 'Wheeled', 'Ship', 'Airdefence', 'Structure'];
 
         var _update_object_positions = update_object_positions;
         update_object_positions = function(objects) {
@@ -309,16 +333,21 @@ $.get(WTM.settings.base_url, function(data) {
             _update_object_positions.apply(this, arguments);
         };
 
-        var $map_info = $('<span id="wtm-mapinfo">').appendTo('#map-root [id=draghandle]');
+        var $map_info = $('<span id="wtm-mapinfo">').appendTo($map_root.data('$caption'));
         var $map_dimension_info = $('<span id="wtm-mapdimensions">').appendTo($map_info);
         var $map_grid_info = $('<span id="wtm-mapgrid">').appendTo($map_info);
         var _map_units = WTM.settings.units === 'meters' ? 'km' : 'mi';
+
         var _update_map_info = update_map_info;
         update_map_info = function(info) {
             _update_map_info.apply(this, arguments);
 
             var map_min = info.map_min;
             var map_max = info.map_max;
+
+            if (!map_min || !map_max) {
+                return;
+            }
 
             _map_width = map_max[0] - map_min[0];
             _map_height = map_max[1] - map_min[0];
@@ -339,34 +368,30 @@ $.get(WTM.settings.base_url, function(data) {
             update_scale();
         };
 
-        updateFast = function() {
-        };
-
-        function xhr_onload(handler) {
-            handler(this.responseText ? JSON.parse(this.responseText) : []);
+        function xhr_onload(handler, send, rate) {
+            if (this.on) {
+                handler(this.responseText ? JSON.parse(this.responseText) : null);
+            }
+            setTimeout(send, rate);
         }
 
-        function get_xhr(url, handler) {
+        function send_xhr(url) {
+            if (this.on) {
+                this.open('GET', url, true);
+                this.send();
+            } else {
+                this.onload();
+            }
+        }
+
+        function poll_url(url, handler, rate, on) {
             var xhr = new XMLHttpRequest();
-            xhr.onload = xhr_onload.bind(xhr, handler);
-            xhr.open('GET', url, true);
-            xhr.send();
+            var send = send_xhr.bind(xhr, url);
+            xhr.onload = xhr_onload.bind(xhr, handler, send, rate);
+            xhr.on = on;
+            send();
+            return xhr;
         }
-
-        WTM.get_object_positions = get_xhr.bind(WTM, '/map_obj.json', update_object_positions);
-        window.setInterval(WTM.get_object_positions, _settings.object_update_rate);
-        WTM.get_object_positions();
-        WTM.get_map_info = get_xhr.bind(WTM, '/map_info.json', update_map_info);
-        window.setInterval(WTM.get_map_info, 5000);
-        WTM.get_map_info();
-        updateSlow = function() {
-            if (_settings.update_indicators) {
-                get_xhr('/indicators', update_indicators);
-            }
-            if (_settings.update_state) {
-                get_xhr('/state', update_state);
-            }
-        };
 
         var $map_scaleinfo = $('<span id="wtm-mapscale">').appendTo($map_info);
         function update_scale() {
@@ -374,11 +399,11 @@ $.get(WTM.settings.base_url, function(data) {
         }
 
         var _addWheelHandler = addWheelHandler;
-        addWheelHandler = function(elem, onWheel) {
-            var _onWheel = onWheel;
+        addWheelHandler = function(elem, handler) {
+            var _handler = handler;
 
-            onWheel = function() {
-                _onWheel.apply(this, arguments);
+            handler = function() {
+                _handler.apply(this, arguments);
                 persist_scale = localStorage.persist_scale = map_scale / _map_width;
                 update_scale();
             };
@@ -433,63 +458,56 @@ $.get(WTM.settings.base_url, function(data) {
             });
         }
 
-        var $indicators_table = $('<table class="wtm-data">').appendTo('#indicators');
+        var $indicators_table = $('<table class="wtm-data">').appendTo('#wtm-indicators');
         var indicators_data = {};
         function update_indicators(data) {
             update_table(data, indicators_data, $indicators_table, 'indicators');
         }
 
-        var $state_table = $('<table class="wtm-data">').appendTo('#state');
+        var $state_table = $('<table class="wtm-data">').appendTo('#wtm-state');
         var state_data = {};
         function update_state(data) {
             update_table(data, state_data, $state_table, 'state');
         }
 
-        var $canvas = $('#map-canvas');
-        _canvas = $canvas[0];
-
         load_positions = function() {
+        };
+
+        $.fn.resizable = function() {
         };
 
         init();
 
-        _ctx = _canvas.getContext('2d');
+        // Clear existing intervals
+        for (var i = 1, n = setTimeout(function() {
+        }, 0); i < n; i++) {
+            window.clearInterval(i);
+        }
 
-
-        var _option_stop = $canvas.resizable('option', 'stop');
-        $canvas.resizable('option', 'stop', function(event, ui) {
-            map_scale = map_scale / (ui.size.width / _canvas.width);
-            update_scale();
-            _option_stop.apply(this, arguments);
-        });
+        poll_url('/map_obj.json',
+                update_object_positions, _settings.object_update_rate, true);
+        poll_url('/map_info.json',
+                update_map_info, _settings.map_info_update_rate, true);
+        var state_xhr = poll_url('/state',
+                update_state, _settings.panels_update_rate, _settings.update_state);
+        var indicators_xhr = poll_url('/indicators',
+                update_indicators, _settings.panels_update_rate, _settings.update_indicators);
 
         update_scale();
 
-        var $indicators_root = $('#indicators-root');
-        var $state_root = $('#state-root');
-
-        $canvas.add($indicators_root).add($state_root).resizable('destroy');
-        $indicators_root.add($state_root).draggable('destroy');
-
         var panel_padding = 5;
-        $('#map-root').css('left', panel_padding);
         function position_panels() {
-            var viewport_height = document.documentElement.clientHeight;
-            var canvas_size = Math.max(viewport_height - 80, 300);
+            var canvas_size = Math.max(document.documentElement.clientHeight - 80, 350);
             if ($canvas.width() !== canvas_size) {
-                $canvas.width(canvas_size);
-                $canvas.height(canvas_size);
-                var _cnv = $canvas.get(0);
-                _cnv.width = canvas_size;
-                _cnv.height = canvas_size;
+                _canvas.width = canvas_size;
+                _canvas.height = canvas_size;
             }
-            $state_root.css('left', canvas_size + panel_padding * 2);
-            $indicators_root.css('left', canvas_size + $state_root.width() + panel_padding * 3);
+            $sidepanels.css('left', canvas_size + panel_padding * 2 + 2);
             update_scale();
         }
 
-        function add_checkbox($panel, setting) {
-            $panel.find('#draghandle').append($('<div class="wtm-toggle">')
+        function add_checkbox($panel, setting, xhr) {
+            $panel.data('$caption').append($('<div class="wtm-toggle">')
                     .append(
                             $('<label>')
                             .attr('for', setting + '-toggle')
@@ -501,9 +519,9 @@ $.get(WTM.settings.base_url, function(data) {
                             .attr('checked', !!_settings[setting])
                             .change(function() {
                                 var checked = this.checked;
+                                xhr.on = checked;
                                 localStorage[setting] = _settings[setting] = checked * 1;
                                 $panel[(checked ? 'remove' : 'add') + 'Class']('off');
-                                position_panels();
                             })
                             )
                     );
@@ -512,12 +530,18 @@ $.get(WTM.settings.base_url, function(data) {
             }
         }
 
-        add_checkbox($indicators_root, 'update_indicators');
-        add_checkbox($state_root, 'update_state');
+        add_checkbox($indicators_root, 'update_indicators', indicators_xhr);
+        add_checkbox($state_root, 'update_state', state_xhr);
 
         position_panels();
 
-        $(window).resize(position_panels);
+        window.onload = function() {
+        };
+
+        $(window).resize(function() {
+//            map_scale = map_scale / (ui.size.width / _canvas.width);
+            position_panels();
+        });
     }
 }).fail(function() {
     window.location.href = 'error.html';

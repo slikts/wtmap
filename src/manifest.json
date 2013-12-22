@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "WT map",
     "description": "Adds custom icons and centering on player to the War Thunder browser map.",
-    "version": "0.2.6",
+    "version": "0.3.1",
     "author": "slikts <dabas@untu.ms",
     "permissions": [
         "http://localhost:8111/"
