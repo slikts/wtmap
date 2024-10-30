@@ -216,121 +216,124 @@ $.get(WTM.settings.base_url, function(data) {
         update_object_positions = function(objects) {
             _player = null;
 
-
-            objects.sort(function(a, b) {
-                if (a.icon === 'Player') {
-                    _player = a;
-                }
-
-                // Put aircrafts at the end so they are drawn last
-                return (_type_priority[a.type] || 0) > (_type_priority[b.type] || 0);
-            });
-
-            var summary = {
-            };
-
-            if (map_info) {
-                var min_distance = null;
-                var friendlies = 0;
-                var enemies = 0;
-                $.each(objects, function(i, item) {
-                    var color = item['color[]'];
-                    var team = color[0] > color[2] ? 'red' : 'blue';
-
-                    var icon = item.icon;
-                    if (icon !== 'none' && icon !== 'Player') {
-                        var _summary = summary[icon];
-                        if (!_summary) {
-                            _summary = summary[icon] = [0, 0];
-                        }
-                        _summary[team === 'blue' ? 0 : 1] += 1;
+            try{
+                objects.sort(function(a, b) {
+                    if (a.icon === 'Player') {
+                        _player = a;
                     }
-
-                    if (item.type !== 'aircraft' || item.icon === 'Player') {
-                        return;
-                    }
-
-                    if (team === 'blue') {
-                        friendlies += 1;
-                    } else {
-                        enemies += 1;
-                    }
-
-                    if (team === 'red' && _player) {
-                        var distance = get_distance(item.x, item.y, _player.x, _player.y);
-                        //item._player_distance = distance;
-
-                        if (min_distance === null || distance < min_distance) {
-                            min_distance = distance;
-                        }
-                    }
+    
+                    // Put aircrafts at the end so they are drawn last
+                    return (_type_priority[a.type] || 0) > (_type_priority[b.type] || 0);
                 });
-                var rows = mapsummary_rows;
-                rows[0].html('');
-                rows[1].html('');
-                var wtm_icons = WTM.icons;
-                var order = summary_order
-                        .slice(0)
-                        .concat(Object.keys(summary)
-                                .filter(function(x) {
-                                    return !~summary_order.indexOf(x);
-                                }));
 
-                $.each(order, function(i, icon) {
-                    var team_objects = summary[icon];
-                    if (!team_objects) {
-                        return;
-                    }
-                    var icon_text;
-                    var aircraft;
-                    if (icon in icon_texts) {
-                        icon_text = icon_texts[icon];
-                        aircraft = true;
-                    } else if (icon === 'Airdefence') {
-                        icon_text = '4';
-                    } else if (icon === 'Structure') {
-                        icon_text = '5';
-                    } else {
-                        icon_text = icon[0];
-                    }
-                    $.each(team_objects, function(i, count) {
-                        var $row = rows[i];
-                        var $icon = $('<th>').text(count ? icon_text : '')
-                                .attr('title', icon)
-                                .appendTo($row);
-                        if (aircraft) {
-                            $icon.addClass('wtm-aircraft')
-                                    .css('fontSize', 23 * wtm_icons[icon_text] + 'px');
+                var summary = {
+                };
+
+                if (map_info) {
+                    var min_distance = null;
+                    var friendlies = 0;
+                    var enemies = 0;
+                    $.each(objects, function(i, item) {
+                        var color = item['color[]'];
+                        var team = color[0] > color[2] ? 'red' : 'blue';
+
+                        var icon = item.icon;
+                        if (icon !== 'none' && icon !== 'Player') {
+                            var _summary = summary[icon];
+                            if (!_summary) {
+                                _summary = summary[icon] = [0, 0];
+                            }
+                            _summary[team === 'blue' ? 0 : 1] += 1;
                         }
-                        $('<td>').text(count ? count : '')
-                                .attr('title', icon)
-                                .appendTo($row);
-                        if (!count) {
 
+                        if (item.type !== 'aircraft' || item.icon === 'Player') {
+                            return;
+                        }
+
+                        if (team === 'blue') {
+                            friendlies += 1;
+                        } else {
+                            enemies += 1;
+                        }
+
+                        if (team === 'red' && _player) {
+                            var distance = get_distance(item.x, item.y, _player.x, _player.y);
+                            //item._player_distance = distance;
+
+                            if (min_distance === null || distance < min_distance) {
+                                min_distance = distance;
+                            }
                         }
                     });
-                });
+                    var rows = mapsummary_rows;
+                    rows[0].html('');
+                    rows[1].html('');
+                    var wtm_icons = WTM.icons;
+                    var order = summary_order
+                            .slice(0)
+                            .concat(Object.keys(summary)
+                                    .filter(function(x) {
+                                        return !~summary_order.indexOf(x);
+                                    }));
 
-                var title_info = [];
-                if (enemies) {
-                    title_info.push('E:' + enemies);
-                }
-                if (min_distance !== null) {
-                    var _units = WTM.settings.units === 'meters' ? 'km' : 'mi';
-                    var _min_distance = (WTM.m2x(min_distance, _units)).toFixed(2);
-                    title_info.push(' > ' + _min_distance + ' ' + _units);
-                }
-                if (friendlies) {
-                    title_info.push('F:' + friendlies);
-                }
+                    $.each(order, function(i, icon) {
+                        var team_objects = summary[icon];
+                        if (!team_objects) {
+                            return;
+                        }
+                        var icon_text;
+                        var aircraft;
+                        if (icon in icon_texts) {
+                            icon_text = icon_texts[icon];
+                            aircraft = true;
+                        } else if (icon === 'Airdefence') {
+                            icon_text = '4';
+                        } else if (icon === 'Structure') {
+                            icon_text = '5';
+                        } else {
+                            icon_text = icon[0];
+                        }
+                        $.each(team_objects, function(i, count) {
+                            var $row = rows[i];
+                            var $icon = $('<th>').text(count ? icon_text : '')
+                                    .attr('title', icon)
+                                    .appendTo($row);
+                            if (aircraft) {
+                                $icon.addClass('wtm-aircraft')
+                                        .css('fontSize', 23 * wtm_icons[icon_text] + 'px');
+                            }
+                            $('<td>').text(count ? count : '')
+                                    .attr('title', icon)
+                                    .appendTo($row);
+                            if (!count) {
 
-                if (title_info.length) {
-                    document.title = '(' + title_info.join(' ') + ') ' + _title;
-                } else {
-                    document.title = _title;
+                            }
+                        });
+                    });
+
+                    var title_info = [];
+                    if (enemies) {
+                        title_info.push('E:' + enemies);
+                    }
+                    if (min_distance !== null) {
+                        var _units = WTM.settings.units === 'meters' ? 'km' : 'mi';
+                        var _min_distance = (WTM.m2x(min_distance, _units)).toFixed(2);
+                        title_info.push(' > ' + _min_distance + ' ' + _units);
+                    }
+                    if (friendlies) {
+                        title_info.push('F:' + friendlies);
+                    }
+
+                    if (title_info.length) {
+                        document.title = '(' + title_info.join(' ') + ') ' + _title;
+                    } else {
+                        document.title = _title;
+                    }
                 }
+                _update_object_positions.apply(this, arguments);
+            }catch(e){
+                console.log(e)
             }
-            _update_object_positions.apply(this, arguments);
         };
 
         var $map_info = $('<span id="wtm-mapinfo">').appendTo($map_root.data('$caption'));
